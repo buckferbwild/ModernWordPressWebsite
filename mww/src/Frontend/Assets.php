@@ -87,12 +87,16 @@ class Assets
 
     /**
     *   Enqueues a Remote Javascript
+    *   @param string $file       Name of the handler, example: bootstrap-js
+    *   @param string $url        URL of the remote resource
+    *   @param boolean $in_footer Wether to load the script in the footer or not
+    *   @param array $dependency  Will load after selected handlers
     */
     private function enqueueRemoteJavascript(
         string $name,
         string $url,
-        bool $in_footer = true,
-        array $dependency = array()
+        array $dependency = array(),
+        bool $in_footer = true
     ) {
         wp_enqueue_script(
             $name,
