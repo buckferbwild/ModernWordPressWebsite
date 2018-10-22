@@ -2,13 +2,13 @@
 
 /**
  * Debug Function
+ *
+ * @example dd($var1, $var2);
  */
 if (!function_exists('dd')) {
-    function dd($debug)
+    function dd(...$debug)
     {
-        echo '<pre>';
-        var_dump($debug);
-        echo '</pre>';
+        echo '<pre>' . var_dump($debug) . '</pre>';
         exit;
     }
 }
