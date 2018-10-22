@@ -42,9 +42,11 @@ Now it's up to you to create awesome stuff!
 
 ## How it works
 
-MWW is installed as a mu-plugin. With it, you don't need a theme. It is used to help you start a new WordPress project using a MVC structure, with all the potential of WordPress. Even though it's powerful, it's also very simple. The src folder, which contains the logic of MWW, contains only 8 files.
+MWW is installed as a mu-plugin. With it, you don't need a theme.
 
-The heart of MWW is the Route class, it works like this:
+It is used to help you start a new WordPress project using a MVC structure, with all the potential of WordPress. Even though it's powerful, it's also very simple. The src folder, which contains the logic of MWW, contains only 8 files.
+
+The heart of MWW is the routing system. It works like this:
 
 ```php
 /**
