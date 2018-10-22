@@ -40,6 +40,73 @@ To get started, simply follow these steps in a clean WordPress installation:
 
 Now it's up to you to create awesome stuff!
 
+## How it works
+
+MWW is installed as a mu-plugin. With it, you don't need a theme.
+
+The heart of MWW is the Route class, it works like this:
+
+```php
+/**
+ * Routes the request to the appropriate Controller
+ */
+public function routeRequest()
+{
+    add_filter('template_include', function () {
+        ob_start();
+
+        if (is_front_page()) {
+            $page = new HomeController;
+        } else {
+            $page = new NotFoundController;
+        }
+
+        $page->output();
+
+        echo ob_get_clean();
+        return false;
+    });
+}
+```
+
+We perform checks using native WordPress functions such as is_front_page() to load the appropriate controller, then we call the method output() on it. Let's take a look at HomeController output method:
+
+```php
+// HomeController
+public function output()
+{
+    $this->template->include('partials.header');
+    $this->template->include('pages.home');
+    $this->template->include('partials.footer');
+}
+```
+
+We are loading a header, the home page content and the footer.
+
+What if we want to show Posts on our Home page?
+
+Well, we can do just this:
+```php
+// HomeController
+public function output()
+{
+    $posts = get_posts();
+
+    $this->template->include('partials.header');
+    $this->template->include('pages.home', ['posts' => $posts);
+    $this->template->include('partials.footer');
+}
+```
+Then, we have a variable in our pages/home view with all posts. Let's use it:
+```php
+// views/pages/home.php
+foreach ($posts as $post) {
+    echo $post->post_title;
+}
+```
+
+You see? We could easily separate the logic, we don't need to use get_posts() in our view, we can do it in the Controller (or better yet, create a Model for it) and pass it digested to the view. This way, it is easier for our application to grow organized.
+
 ## Contributing
 
 To contribute to Modern WordPress Website, you can open an issue with your suggestion and if approved, do a pull-request. Please follow PSR-2 code-styling standards and remind about the unopiniated and simple philosophy of Modern WordPress Theme.
