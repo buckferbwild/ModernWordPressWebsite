@@ -6,12 +6,12 @@
 Modern WordPress Website (MWW) is a modern way of building WordPress websites.<br/>
 Simple, unopiniated and powerful, it's a great skeleton to bootstrap a new WordPress project.
 
+- True MVC experience in WordPress.
 - Simple route engine with native WordPress functions.
-- Fully featured MVC.
 - Modern, yet simple PHP.
 - PSR-4 Autoloading.
 - Only 20 files and 15kb in size (Approximately).
-- Installs as *mu-plugin*
+- Installs as a *mu-plugin*
 
 Modern WordPress Website (MWW) is great for experienced PHP developers using WordPress, and for intermediate developers who want to take their skills to the next level.
 
@@ -29,7 +29,7 @@ Modern WordPress Website (MWW) is great for experienced PHP developers using Wor
 
 ## Installation
 
-Despite being a Theme in practical terms, *Modern WordPress Website* is installed as a mu-plugin. This way we intercept WordPress requests at an earlier stage and have more control over it.
+Despite being a Theme in practical terms, *Modern WordPress Website* is installed as a mu-plugin. This way we intercept WordPress requests at an earlier stage and have more control over the application.
 
 To get started, simply follow these steps in a clean WordPress installation:
 
@@ -42,9 +42,9 @@ Now it's up to you to create awesome stuff!
 
 ## How it works
 
-MWW is installed as a mu-plugin. With it, you don't need a theme.
+MWW brings a true MVC experience to WordPress. It is installed as a mu-plugin. With it, you don't need a theme.
 
-It is used to help you start a new WordPress project using a MVC structure, with all the potential of WordPress. Even though it's powerful, it's also very simple. The src folder, which contains the logic of MWW, contains only 8 files.
+Even though MWW is powerful, it's also very simple. The src folder, which contains the logic of MWW contains only 8 files.
 
 The heart of MWW is the routing system. It works like this:
 
@@ -99,7 +99,7 @@ public function output()
     $this->template->include('partials.footer');
 }
 ```
-Then, we have a variable in our pages/home view with all posts. Let's use it:
+Then, we have a variable in our home view with all the posts. Let's use it:
 ```php
 // views/pages/home.php
 foreach ($posts as $post) {
@@ -107,7 +107,7 @@ foreach ($posts as $post) {
 }
 ```
 
-You see? We could easily separate the logic, we don't need to use get_posts() in our view, we can do it in the Controller (or better yet, create a Model for it) and pass it digested to the view. This way, it is easier for our application to grow organized.
+You see? We could easily separate the logic, we don't need to use get_posts() in our view, we can do it in the Controller (or create a model class) and pass it digested to the view. This way, it is easier for our application to grow organized.
 
 ## Contributing
 
