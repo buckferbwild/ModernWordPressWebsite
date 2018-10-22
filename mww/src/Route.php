@@ -15,7 +15,7 @@ class Route
         add_filter('template_include', function() {
             ob_start();
 
-            if (is_front_page()){
+            if (is_front_page()) {
                 $page = new HomeController;
             } else {
                 $page = new NotFoundController;

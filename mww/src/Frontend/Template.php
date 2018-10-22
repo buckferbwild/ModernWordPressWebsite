@@ -6,6 +6,9 @@ class Template
 {
     /**
      * Includes a template file
+     *
+     *  @param string $file Name of the view to load
+     *  @param array $data Data to be passed to the view
      */
     public function include($file, $data = [])
     {
