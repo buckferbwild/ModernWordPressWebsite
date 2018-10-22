@@ -1,5 +1,6 @@
-(function($) {
+(function ($) {
 
     // You can use $ here
 
-})( jQuery );
+})(jQuery);
+

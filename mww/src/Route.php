@@ -12,7 +12,7 @@ class Route
      */
     public function routeRequest()
     {
-        add_filter('template_include', function() {
+        add_filter('template_include', function () {
             ob_start();
 
             if (is_front_page()) {

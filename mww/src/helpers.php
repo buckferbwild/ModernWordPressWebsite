@@ -4,7 +4,13 @@
  * Debug Function
  */
 if (!function_exists('dd')) {
-    function dd($debug){echo '<pre>';var_dump($debug);echo '</pre>';exit;}
+    function dd($debug)
+    {
+        echo '<pre>';
+        var_dump($debug);
+        echo '</pre>';
+        exit;
+    }
 }
 
 /**
@@ -12,7 +18,8 @@ if (!function_exists('dd')) {
  * @see https://wordpress.stackexchange.com/a/237285/27278
  */
 if (!function_exists('is_wp_login')) {
-    function is_wp_login(){
+    function is_wp_login()
+    {
         $ABSPATH_MY = str_replace(array('\\','/'), DIRECTORY_SEPARATOR, ABSPATH);
         return ((in_array($ABSPATH_MY.'wp-login.php', get_included_files()) || in_array($ABSPATH_MY.'wp-register.php', get_included_files()) ) || (isset($_GLOBALS['pagenow']) && $GLOBALS['pagenow'] === 'wp-login.php') || $_SERVER['PHP_SELF']== '/wp-login.php');
     }
@@ -21,14 +28,16 @@ if (!function_exists('is_wp_login')) {
 /**
  * Returns URL for MWW folder
  */
-function get_mwt_url() {
+function get_mwt_url()
+{
     return MWW_URL;
 }
 
 /**
  * Returns PATH for MWW folder
  */
-function get_mwt_path() {
+function get_mwt_path()
+{
     return MWW_PATH;
 }
 
@@ -38,7 +47,8 @@ function get_mwt_path() {
  *  @param string $file Name of the view to load
  *  @param array $data Data to be passed to the view
  */
-function include_view($file, $data = []) {
+function include_view($file, $data = [])
+{
     $template = new MWW\Frontend\Template;
     $template->include($file, $data);
 }
