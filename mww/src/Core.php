@@ -27,9 +27,9 @@ class Core
     {
         $this->loadHelpers();
         $this->loadAssets();
+        $this->registerMenu();
         Assets::removeEmojis();
         Assets::registerCustomImageSizes();
-        Navigation::registerMenu();
     }
 
     /**
@@ -50,5 +50,14 @@ class Core
             add_action('wp_enqueue_scripts', [$assets, 'enqueueStyles']);
             add_action('wp_enqueue_scripts', [$assets, 'enqueueJavascripts']);
         }
+    }
+
+    /**
+     * Register the menu
+     * @see https://codex.wordpress.org/Navigation_Menus
+     */
+    private function registerMenu()
+    {
+        register_nav_menu('main-menu', __('Main Menu'));
     }
 }
