@@ -6,9 +6,8 @@ use MWW\Frontend\Template;
 
 abstract class PagesController
 {
-
     /**
-     * Template class instance
+     * \MWW\Frontend\Template instance
      */
     protected $template;
 
@@ -18,7 +17,7 @@ abstract class PagesController
     }
 
     /**
-     * Returns the page template
+     * Echo the page template
      */
     abstract public function output();
 }

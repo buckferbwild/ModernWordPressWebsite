@@ -6,7 +6,6 @@ use MWW\Pages\Abstracts\PagesController;
 
 class HomeController extends PagesController
 {
-
     public function output()
     {
         $this->template->include('partials.header');
