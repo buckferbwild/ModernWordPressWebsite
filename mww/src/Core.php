@@ -47,7 +47,6 @@ class Core
     {
         if (!is_admin() && !is_wp_login()) {
             $assets = new Assets;
-            add_action('wp_enqueue_scripts', [$assets, 'removeDefaultJquery']);
             add_action('wp_enqueue_scripts', [$assets, 'enqueueStyles']);
             add_action('wp_enqueue_scripts', [$assets, 'enqueueJavascripts']);
         }

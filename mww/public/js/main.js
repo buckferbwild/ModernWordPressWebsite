@@ -1,1 +1,5 @@
-// You can use $ here
+(function($) {
+
+    // You can use $ here
+
+})( jQuery );

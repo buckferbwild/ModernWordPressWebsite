@@ -5,14 +5,6 @@ namespace MWW\Frontend;
 class Assets
 {
     /**
-     * Removes WordPress's jQuery. We'll be using our own.
-     */
-    public function removeDefaultJquery()
-    {
-        wp_deregister_script('jquery');
-    }
-
-    /**
     *   Enqueues Theme Styles
     */
     public function enqueueStyles()
@@ -21,8 +13,20 @@ class Assets
     }
 
     /**
+    *   Enqueues Theme JavaScript
+    */
+    public function enqueueJavascripts()
+    {
+        $this->enqueueJavascript('main.js', ['jquery']);
+    }
+
+    /**
     *   Enqueues a Single CSS
     *   https://developer.wordpress.org/reference/functions/wp_enqueue_style/
+    *
+    *   @param string $file      Name of the file
+    *   @param array $dependency Will load after selected handlers
+    *   @param string $path       Path to load from, starting from MWT_PATH
     */
     private function enqueueStyle(
         string $file,
@@ -58,21 +62,17 @@ class Assets
     }
 
     /**
-    *   Enqueues Theme JavaScript
-    */
-    public function enqueueJavascripts()
-    {
-        $this->enqueueJavascript('jquery.min.js', []);
-        $this->enqueueJavascript('main.js');
-    }
-
-    /**
     *   Enqueues a Single Javascript
     *   https://developer.wordpress.org/reference/functions/wp_enqueue_script/
+    *
+    *   @param string $file       Name of the file
+    *   @param array $dependency  Will load after selected handlers
+    *   @param string $path       Path to load from, starting from MWT_PATH
+    *   @param boolean $in_footer Wether to load the script in the footer or not
     */
     private function enqueueJavascript(
         string $file,
-        array $dependency = array('jquery'),
+        array $dependency = array(),
         string $path = '/public/js/',
         bool $in_footer = true
     ) {
