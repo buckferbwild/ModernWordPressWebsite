@@ -26,7 +26,7 @@ class Assets
     *
     *   @param string $file      Name of the file
     *   @param array $dependency Will load after selected handlers
-    *   @param string $path       Path to load from, starting from MWT_PATH
+    *   @param string $path      Path to load from, starting from MWW_PATH
     */
     private function enqueueStyle(
         string $file,
@@ -67,7 +67,7 @@ class Assets
     *
     *   @param string $file       Name of the file
     *   @param array $dependency  Will load after selected handlers
-    *   @param string $path       Path to load from, starting from MWT_PATH
+    *   @param string $path       Path to load from, starting from MWW_PATH
     *   @param boolean $in_footer Wether to load the script in the footer or not
     */
     private function enqueueJavascript(
