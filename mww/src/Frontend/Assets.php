@@ -35,9 +35,9 @@ class Assets
     ) {
         wp_enqueue_style(
             $file,
-            get_mwt_url() . $path . $file,
+            get_mww_url() . $path . $file,
             $dependency,
-            filemtime(get_mwt_path() . $path . $file)
+            filemtime(get_mww_path() . $path . $file)
         );
     }
 
@@ -78,9 +78,9 @@ class Assets
     ) {
         wp_enqueue_script(
             $file == 'jquery.min.js' ? 'jquery' : $file,
-            get_mwt_url() . $path . $file,
+            get_mww_url() . $path . $file,
             $dependency,
-            filemtime(get_mwt_path() . $path . $file),
+            filemtime(get_mww_path() . $path . $file),
             $in_footer
         );
     }

@@ -28,7 +28,7 @@ if (!function_exists('is_wp_login')) {
 /**
  * Returns URL for MWW folder
  */
-function get_mwt_url()
+function get_mww_url()
 {
     return MWW_URL;
 }
@@ -36,7 +36,7 @@ function get_mwt_url()
 /**
  * Returns PATH for MWW folder
  */
-function get_mwt_path()
+function get_mww_path()
 {
     return MWW_PATH;
 }
