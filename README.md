@@ -17,9 +17,9 @@ Modern WordPress Website (MWW) is great for experienced PHP developers using Wor
 
 ## Building a Small Project
 
-[![Click to watch on YouTube](https://img.youtube.com/vi/-_PmRfG83Oc/0.jpg)](https://www.youtube.com/watch?v=-_PmRfG83Oc)
+[![Click to watch on YouTube](https://img.youtube.com/vi/cQKBLWGM-uE/0.jpg)](https://www.youtube.com/watch?v=cQKBLWGM-uE)
 
-[(Click to watch on YouTube)](https://www.youtube.com/watch?v=-_PmRfG83Oc)
+[(Click to watch on YouTube)](https://www.youtube.com/watch?v=cQKBLWGM-uE)
 
 ## Building a Small Project (Português PT-BR)
 
@@ -95,7 +95,7 @@ public function output()
     $posts = get_posts();
 
     $this->template->include('partials.header');
-    $this->template->include('pages.home', ['posts' => $posts);
+    $this->template->include('pages.home', ['posts' => $posts]);
     $this->template->include('partials.footer');
 }
 ```
