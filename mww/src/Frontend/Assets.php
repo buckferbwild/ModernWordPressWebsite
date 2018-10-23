@@ -17,7 +17,7 @@ class Assets
     */
     public function enqueueJavascripts()
     {
-        $this->enqueueJavascript('main.js', ['jquery']);
+        $this->enqueueJavascript('main.js');
     }
 
     /**
@@ -72,12 +72,12 @@ class Assets
     */
     private function enqueueJavascript(
         string $file,
-        array $dependency = array(),
+        array $dependency = array('jquery'),
         string $path = '/public/js/',
         bool $in_footer = true
     ) {
         wp_enqueue_script(
-            $file == 'jquery.min.js' ? 'jquery' : $file,
+            $file,
             get_mww_url() . $path . $file,
             $dependency,
             filemtime(get_mww_path() . $path . $file),
@@ -89,13 +89,13 @@ class Assets
     *   Enqueues a Remote Javascript
     *   @param string $file       Name of the handler, example: bootstrap-js
     *   @param string $url        URL of the remote resource
-    *   @param boolean $in_footer Wether to load the script in the footer or not
     *   @param array $dependency  Will load after selected handlers
+    *   @param boolean $in_footer Wether to load the script in the footer or not
     */
     private function enqueueRemoteJavascript(
         string $name,
         string $url,
-        array $dependency = array(),
+        array $dependency = array('jquery'),
         bool $in_footer = true
     ) {
         wp_enqueue_script(
