@@ -3,7 +3,14 @@
 
 ## Before we begin
 
-This is an extremely experimental project. Play with it, understand it's concepts, but take care using it in production. I'm not sure how it will play out with all the plugins out there. The idea is to bring an MVC experience to WordPress, similar to Laravel, and also allow for fast API responses with small WordPress overhead. This is recommended for experienced developers to play around.
+This is an extremely experimental project. Play with it, understand it's concepts, but take care using it in production. I'm not sure how it will play out with all the plugins out there. The idea is to bring an MVC experience to WordPress, similar to Laravel, and also allow for fast API responses with small WordPress overhead. This is recommended for experienced developers to play around and try new stuff.
+
+When it's OK to use this project:
+
+- If you are an experienced developer
+- You want to play around with a new concept
+- You are OK not using a theme and building the website from scratch using HTML (Similar to Laravel)
+- You are aware this is BETA and experimental
 
 ## About Modern WordPress Website
 
