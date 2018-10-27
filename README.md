@@ -1,6 +1,16 @@
 
 <p align="center"><img src="https://www.lucasbustamante.com.br/wp-content/uploads/2018/10/mww-logo.svg"></p>
 
+## Before we begin
+
+This is an extremely experimental project. Play with it, understand it's concepts, but take care using it in production. I'm not sure how it will play out with all the plugins out there. The idea is to bring an MVC experience to WordPress, similar to Laravel, and also allow for fast API responses with small WordPress overhead. This is recommended for experienced developers to play around and try new stuff.
+
+When it's OK to use this project:
+
+- If you are an experienced developer, or an intermediate developer who wants to expand your knowledge
+- You are OK not using a theme and building the website from scratch using HTML (Similar to Laravel)
+- You are aware this is BETA and experimental
+
 ## About Modern WordPress Website
 
 Modern WordPress Website (MWW) is a modern way of building WordPress websites.<br/>
@@ -108,18 +118,6 @@ foreach ($posts as $post) {
 ```
 
 You see? We could easily separate the logic, we don't need to use get_posts() in our view, we can do it in the Controller (or create a model class) and pass it digested to the view. This way, it is easier for our application to grow organized.
-
-## Compatibility
-
-MWW gives total control over WordPress to experienced developers. It brings a MVC similar to Laravel natively to WordPress, but it comes with a cost. Since we hook template_include to not use a theme, some things are just not supported:
-
-- WordPress Customizer (Not Supported)
-- Gutenberg (Under test)
-- WooCommerce (Under test)
-- Visual Composer (Under test)
-- Elementor (Under test)
-
-Those marked as "Under test", please open an issue and let me know if everything worked fine or if you faced any issues.
 
 ## Contributing
 
