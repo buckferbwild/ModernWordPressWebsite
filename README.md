@@ -7,8 +7,7 @@ This is an extremely experimental project. Play with it, understand it's concept
 
 When it's OK to use this project:
 
-- If you are an experienced developer
-- You want to play around with a new concept
+- If you are an experienced developer, or an intermediate developer who wants to expand your knowledge
 - You are OK not using a theme and building the website from scratch using HTML (Similar to Laravel)
 - You are aware this is BETA and experimental
 
