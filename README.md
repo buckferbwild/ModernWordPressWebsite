@@ -126,9 +126,3 @@ To contribute to Modern WordPress Website, you can open an issue with your sugge
 ## License
 
 The Modern WordPress Website is licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-## Hire me
-
-![Hire Me!](https://www.lucasbustamante.com.br/wp-content/uploads/2018/10/lucas-small.jpg)<br/>
-*My name is Lucas Bustamante, creator of Modern WordPress Website.<br/>
-Hire me at lucasfbustamante@gmail.com*
