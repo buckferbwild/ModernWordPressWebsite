@@ -1,12 +1,12 @@
 <?php
 
-namespace MWW\Pages;
+namespace App\Pages;
 
-use MWW\Pages\Abstracts\PagesController;
+use App\Pages\Abstracts\PagesController;
 
 class NotFoundController extends PagesController
 {
-    public function output()
+    public function index()
     {
         $this->template->include('partials.header');
         $this->template->include('pages.404');

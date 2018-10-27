@@ -1,10 +1,9 @@
 <?php
 
-namespace MWW;
+namespace App;
 
-use MWW\Route;
-use MWW\Frontend\Assets;
-use MWW\Frontend\Navigation;
+use MWW\Router;
+use MWW\Assets;
 
 class Core
 {
@@ -15,9 +14,10 @@ class Core
     {
         $this->setUp();
 
-        // Do the magic here
-        $route = new Route;
-        add_action('parse_query', [$route, 'routeRequest'], 100);
+        // Route requests here
+        $router = Router::singleton();
+        $router->registerRoutes('app.php');
+        add_action('parse_query', [$router, 'routeRequests']);
     }
 
     /**
@@ -37,7 +37,7 @@ class Core
      */
     private function loadHelpers()
     {
-        require_once(MWW_PATH . '/src/helpers.php');
+        require_once(MWW_PATH . '/framework/helpers.php');
     }
 
     /**
@@ -46,9 +46,7 @@ class Core
     private function loadAssets()
     {
         if (!is_admin() && !is_wp_login()) {
-            $assets = new Assets;
-            add_action('wp_enqueue_scripts', [$assets, 'enqueueStyles']);
-            add_action('wp_enqueue_scripts', [$assets, 'enqueueJavascripts']);
+            require_once('Assets.php');
         }
     }
 

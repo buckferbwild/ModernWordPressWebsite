@@ -1,7 +1,11 @@
 {
     "autoload": {
         "psr-4": {
-            "MWW\\": "src"
+            "App\\": "app",
+            "MWW\\": "framework"
         }
+    },
+    "require": {
+        "phroute/phroute": "^2.1"
     }
 }

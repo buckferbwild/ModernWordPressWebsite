@@ -1,15 +1,15 @@
 <?php
 
-namespace MWW\Pages;
+namespace App\Pages;
 
-use MWW\Pages\Abstracts\PagesController;
+use App\Pages\Abstracts\PagesController;
 
 class HomeController extends PagesController
 {
-    public function output()
+    public function index()
     {
         $this->template->include('partials.header');
-        $this->template->include('pages.home');
+        $this->template->include('pages.home', ['page' => get_post(2)]);
         $this->template->include('partials.footer');
     }
 }

@@ -10,7 +10,7 @@
  */
 
 /** This file contains the bare-minimum code to run the Core class. */
-use MWW\Core;
+use App\Core;
 
 /**
  *  Subfolder in mu-plugins folder that holds the project.

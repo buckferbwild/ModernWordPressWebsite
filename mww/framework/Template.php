@@ -1,6 +1,6 @@
 <?php
 
-namespace MWW\Frontend;
+namespace MWW;
 
 class Template
 {

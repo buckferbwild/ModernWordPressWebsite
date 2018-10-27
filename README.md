@@ -109,6 +109,18 @@ foreach ($posts as $post) {
 
 You see? We could easily separate the logic, we don't need to use get_posts() in our view, we can do it in the Controller (or create a model class) and pass it digested to the view. This way, it is easier for our application to grow organized.
 
+## Compatibility
+
+MWW gives total control over WordPress to experienced developers. It brings a MVC similar to Laravel natively to WordPress, but it comes with a cost. Since we hook template_include to not use a theme, some things are just not supported:
+
+- WordPress Customizer (Not Supported)
+- Gutenberg (Under test)
+- WooCommerce (Under test)
+- Visual Composer (Under test)
+- Elementor (Under test)
+
+Those marked as "Under test", please open an issue and let me know if everything worked fine or if you faced any issues.
+
 ## Contributing
 
 To contribute to Modern WordPress Website, you can open an issue with your suggestion and if approved, do a pull-request. Please follow PSR-2 code-styling standards and remind about the unopiniated and simple philosophy of Modern WordPress Theme.
