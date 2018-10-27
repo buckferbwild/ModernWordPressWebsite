@@ -1,6 +1,10 @@
 
 <p align="center"><img src="https://www.lucasbustamante.com.br/wp-content/uploads/2018/10/mww-logo.svg"></p>
 
+## Before we begin
+
+This is an extremely experimental project. Play with it, understand it's concepts, but take care using it in production. I'm not sure how it will play out with all the plugins out there. The idea is to bring an MVC experience to WordPress, similar to Laravel, and also allow for fast API responses with small WordPress overhead. This is recommended for experienced developers to play around.
+
 ## About Modern WordPress Website
 
 Modern WordPress Website (MWW) is a modern way of building WordPress websites.<br/>
