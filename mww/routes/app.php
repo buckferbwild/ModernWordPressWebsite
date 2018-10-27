@@ -1,7 +1,10 @@
 <?php
-
 /**
- * If a route is not found here, it continues to WordPress regular loading process
+ *  Routes in this file are processed as soon as at "shutdown" hook, so
+ *  we give time for WordPress and it's plugins to process everything they
+ *  want to process.
+ *
+ *  If a route is not found here, it continues with WordPress regular loading process.
  */
 
 use MWW\Router;

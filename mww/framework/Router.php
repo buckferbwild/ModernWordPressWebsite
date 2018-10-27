@@ -37,25 +37,34 @@ class Router
     /**
     *   Register a Routes file
     */
-    public function registerRoutes(string $file) {
+    public function loadRouteFile(string $file) {
         require_once(MWW_PATH . '/routes/' . $file);
     }
 
     /**
      * Routes the request to the appropriate Controller
      */
-    public function routeRequests()
+    public function routeRequests(string $route_file, bool $isAPI = false)
     {
+        $this->loadRouteFile($route_file);
         try {
             # NB. You can cache the return value from $router->getData() so you don't have to create the routes each request - massive speed gains
             $dispatcher = new \Phroute\Phroute\Dispatcher(self::$router->getData());
 
             $response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
-            add_filter('template_include', function () {
+            // Loads a page on the web
+            if ( ! $isAPI) {
+                add_filter('template_include', function () {
+                    echo $response;
+                    return false;
+                });
+            } else {
+                // API response
                 echo $response;
-                return false;
-            });
+                exit;
+            }
+
 
         } catch (\Phroute\Phroute\Exception\HttpRouteNotFoundException $e) {
             // If a Custom route is not found, continue with Native WordPress Routes

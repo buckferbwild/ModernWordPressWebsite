@@ -14,10 +14,13 @@ class Core
     {
         $this->setUp();
 
-        // Route requests here
-        $router = Router::singleton();
-        $router->registerRoutes('app.php');
-        add_action('parse_query', [$router, 'routeRequests']);
+        // Route API Requests
+        Router::singleton()->routeRequests('api.php', true);
+
+        // Route Web Requests
+        add_action('wp', function() {
+            Router::singleton()->routeRequests('app.php');
+        });
     }
 
     /**
