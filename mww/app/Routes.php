@@ -9,12 +9,14 @@ Router::singleton()->add('GET', '/myapi', function() {
     echo 'This has run with small WordPress overhead';
 });
 
+//Router::singleton()->add('GET', '/', ['App\Pages\HomeController', 'index']);
+
 /**
  * Routes to be interpreted at wp hook.
  * At this point, all plugins have loaded.
  */
 add_action('wp', function() {
-    Router::singleton()->add('GET', '/', ['App\Pages\HomeController', 'index']);
+    Router::singleton()->add('GET', '/', ['\App\Pages\HomeController', 'index']);
 });
 
 /**

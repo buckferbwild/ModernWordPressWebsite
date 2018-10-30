@@ -1,13 +1,13 @@
 <?php
 
-use MWW\Assets;
+use MWW\Frontend;
 
 /**
  * Enqueues application's CSS
  */
 function enqueueAppCss()
 {
-    Assets::enqueueStyle('style.css');
+    Frontend::enqueueStyle('style.css');
 }
 add_action('wp_enqueue_scripts', 'enqueueAppCss');
 
@@ -16,6 +16,6 @@ add_action('wp_enqueue_scripts', 'enqueueAppCss');
  */
 function enqueueAppJs()
 {
-    Assets::enqueueJavascript('main.js');
+    Frontend::enqueueJavascript('main.js');
 }
 add_action('wp_enqueue_scripts', 'enqueueAppJs');

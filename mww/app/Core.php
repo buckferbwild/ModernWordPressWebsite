@@ -3,6 +3,7 @@
 namespace App;
 
 use MWW\Frontend;
+use MWW\Router;
 
 class Core
 {
@@ -14,7 +15,10 @@ class Core
         $this->setUp();
 
         // Do the magic here
-        require_once(__DIR__ . '/Routes.php');
+        require_once('Routes.php');
+        add_action('template_redirect', function() {
+            Router::singleton()->routeRequests();
+        }, PHP_INT_MAX);
     }
 
     /**
@@ -43,9 +47,7 @@ class Core
     private function loadAssets()
     {
         if (!is_admin() && !is_wp_login()) {
-            $assets = new Assets;
-            add_action('wp_enqueue_scripts', [$assets, 'enqueueStyles']);
-            add_action('wp_enqueue_scripts', [$assets, 'enqueueJavascripts']);
+            require_once('Assets.php');
         }
     }
 

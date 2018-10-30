@@ -22,9 +22,7 @@ class Router
     {
         static $inst = null;
         if ($inst === null) {
-            self::$router = [];
-            self::$router['RouteCollector'] = new RouteCollector;
-            self::$router['NativeRoutes'] = [];
+            self::$router = new RouteCollector;
             $inst = new static;
         }
         return $inst;
@@ -41,8 +39,9 @@ class Router
     /**
      * Routes the request to the appropriate Controller
      */
-    public function routeRequests(bool $templateInclude = true)
+    public function routeRequests($templateInclude = true)
     {
+
         if ( ! $this->responded) {
             try {
                 # NB. You can cache the return value from $router->getData() so you don't have to create the routes each request - massive speed gains
@@ -90,7 +89,7 @@ class Router
      */
     public function add($method, $route, $handler)
     {
-        self::$router['RouteCollector']->addRoute(strtoupper($method), $route, $handler);
+        self::$router->addRoute(strtoupper($method), $route, $handler);
     }
 
     /**
