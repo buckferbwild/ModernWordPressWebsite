@@ -2,7 +2,7 @@
 
 namespace MWW;
 
-class Assets
+class Frontend
 {
     /**
     *   Enqueues a Single CSS

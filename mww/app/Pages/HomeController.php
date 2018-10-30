@@ -2,14 +2,13 @@
 
 namespace App\Pages;
 
-use App\Pages\Abstracts\PagesController;
-
-class HomeController extends PagesController
+class HomeController extends Abstracts\PagesController
 {
     public function index()
     {
-        $this->template->include('partials.header');
-        $this->template->include('pages.home');
-        $this->template->include('partials.footer');
+        echo 'Soy home!';
+        //$this->template->include('partials.header');
+        //$this->template->include('pages.home');
+        //$this->template->include('partials.footer');
     }
 }

@@ -3,10 +3,11 @@
 /**
  * Debug Function
  *
- * @example dd($var1, $var2);
+ * @example dd($var);
+ * @example dd([$var1, $var2]);
  */
 if (!function_exists('dd')) {
-    function dd(...$debug)
+    function dd($debug)
     {
         echo '<pre>' . var_dump($debug) . '</pre>';
         exit;
@@ -49,6 +50,6 @@ function get_mww_path()
  */
 function include_view($file, $data = [])
 {
-    $template = new MWW\Frontend\Template;
+    $template = new MWW\Template;
     $template->include($file, $data);
 }

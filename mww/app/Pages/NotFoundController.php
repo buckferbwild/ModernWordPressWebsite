@@ -2,11 +2,9 @@
 
 namespace App\Pages;
 
-use App\Pages\Abstracts\PagesController;
-
-class NotFoundController extends PagesController
+class NotFoundController extends Abstracts\PagesController
 {
-    public function index()
+    public function output()
     {
         $this->template->include('partials.header');
         $this->template->include('pages.404');

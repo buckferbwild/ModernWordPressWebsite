@@ -2,8 +2,7 @@
 
 namespace App;
 
-use MWW\Router;
-use MWW\Assets;
+use MWW\Frontend;
 
 class Core
 {
@@ -14,13 +13,8 @@ class Core
     {
         $this->setUp();
 
-        // Route API Requests
-        Router::singleton()->routeRequests('api.php', true);
-
-        // Route Web Requests
-        add_action('wp', function() {
-            Router::singleton()->routeRequests('app.php');
-        });
+        // Do the magic here
+        require_once(__DIR__ . '/Routes.php');
     }
 
     /**
@@ -31,8 +25,8 @@ class Core
         $this->loadHelpers();
         $this->loadAssets();
         $this->registerMenu();
-        Assets::removeEmojis();
-        Assets::registerCustomImageSizes();
+        Frontend::removeEmojis();
+        Frontend::registerCustomImageSizes();
     }
 
     /**
@@ -40,7 +34,7 @@ class Core
      */
     private function loadHelpers()
     {
-        require_once(MWW_PATH . '/framework/helpers.php');
+        require_once(MWW_PATH . '/app/helpers.php');
     }
 
     /**
@@ -49,7 +43,9 @@ class Core
     private function loadAssets()
     {
         if (!is_admin() && !is_wp_login()) {
-            require_once('Assets.php');
+            $assets = new Assets;
+            add_action('wp_enqueue_scripts', [$assets, 'enqueueStyles']);
+            add_action('wp_enqueue_scripts', [$assets, 'enqueueJavascripts']);
         }
     }
 
