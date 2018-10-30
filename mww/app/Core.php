@@ -3,7 +3,6 @@
 namespace App;
 
 use MWW\Frontend;
-use MWW\Router;
 
 class Core
 {
@@ -16,9 +15,6 @@ class Core
 
         // Do the magic here
         require_once('Routes.php');
-        add_action('template_redirect', function() {
-            Router::singleton()->routeRequests();
-        }, PHP_INT_MAX);
     }
 
     /**

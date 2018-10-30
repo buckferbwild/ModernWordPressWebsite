@@ -5,7 +5,7 @@
             "MWW\\": "framework"
         }
     },
-    "require": {
-        "phroute/phroute": "^2.1"
+    "require-dev": {
+        "lucatume/wp-browser": "^2.1"
     }
 }

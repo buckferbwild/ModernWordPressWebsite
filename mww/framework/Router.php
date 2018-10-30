@@ -2,102 +2,17 @@
 
 namespace MWW;
 
-use Phroute\Phroute\RouteCollector;
-
 class Router
 {
-    /** Phroute\Phroute\RouteCollector */
-    private static $router;
-
-    private $responded = false;
+    /** @var array holds which conditional tags were already processed */
+    protected $processed_conditional_tags = [];
 
     /**
-     * Singleton
-     *
-     * Call this method to get an instance of Route
-     *
-     * @return Router
-     */
-    public static function singleton()
-    {
-        static $inst = null;
-        if ($inst === null) {
-            self::$router = new RouteCollector;
-            $inst = new static;
-        }
-        return $inst;
-    }
-    /**
-     * Singleton
-     *
-     * Private constructor
-     */
-    private function __construct()
-    {
-    }
-
-    /**
-     * Routes the request to the appropriate Controller
-     */
-    public function routeRequests($templateInclude = true)
-    {
-
-        if ( ! $this->responded) {
-            try {
-                # NB. You can cache the return value from $router->getData() so you don't have to create the routes each request - massive speed gains
-                $dispatcher = new \Phroute\Phroute\Dispatcher(self::$router->getData());
-
-                $response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
-
-                // Loads a page on the web
-                if ($templateInclude) {
-                    add_filter('template_include', function () {
-                        $this->dispatchResponse($response);
-                        return false;
-                    });
-                } else {
-                    // API response
-                    $this->dispatchResponse($response);
-                }
-
-
-            } catch (\Phroute\Phroute\Exception\HttpRouteNotFoundException $e) {
-                // If a Custom route is not found, continue with Native WordPress Routes
-            }
-        }
-    }
-
-    /**
-     * Dispatches a response for a matched route
-     *
-     * @param $response
-     */
-    private function dispatchResponse($response)
-    {
-        $this->responded = true;
-        echo $response;
-    }
-
-    /**
-     * Add a route to the RouteCollector
-     *
-     * @see https://github.com/mrjgreen/phroute
-     *
-     * @param $method GET, POST, PUT, etc
-     * @param $route string '/my-example-route'
-     * @param $handler mixed
-     */
-    public function add($method, $route, $handler)
-    {
-        self::$router->addRoute(strtoupper($method), $route, $handler);
-    }
-
-    /**
-     * Overrides WordPress templating behavior using template_include
+     * Overrides WordPress templating behavior using template_include filter
      *
      * @see https://codex.wordpress.org/Conditional_Tags#Conditional_Tags_Index
      */
-    public function conditional(string $conditional_tag, $handler)
+    public function add(string $conditional_tag, $handler)
     {
         try {
             $this->assertValidConditionalTag($conditional_tag);
@@ -105,39 +20,46 @@ class Router
             echo $e->getMessage();
             exit;
         }
-
-        add_filter('template_include', function () use($handler) {
-            if (is_array($handler)) {
-                try {
-                    $response = $this->processConditionalByArray($handler);
-                } catch (\Exception $e) {
-                    echo $e->getMessage();
-                    exit;
+        if ($this->assertConditionalTagWasNotProcessed($conditional_tag)) {
+            add_filter('template_include', function () use($conditional_tag, $handler) {
+                if (call_user_func($conditional_tag)) {
+                    if (is_array($handler)) {
+                        try {
+                            $response = $this->processConditionalByArray($handler);
+                        } catch (\Exception $e) {
+                            echo $e->getMessage();
+                            exit;
+                        }
+                    } elseif (is_string($handler) && function_exists($handler)) {
+                        try {
+                            $response = $this->processConditionalByString($handler);
+                        } catch (\Exception $e) {
+                            echo $e->getMessage();
+                            exit;
+                        }
+                    } elseif ($handler instanceof \Closure) {
+                        try {
+                            $response = $this->processConditionalByClosure($handler);
+                        } catch (\Exception $e) {
+                            echo $e->getMessage();
+                            exit;
+                        }
+                    } else {
+                        throw new \Exception('Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.');
+                    }
+                    // Return response
+                    echo $response;
+                    return false;
+                } else {
+                    // Conditional tag returned false. Continue with WordPress loading...
+                    return true;
                 }
-            } elseif (is_string($handler) && function_exists($handler)) {
-                try {
-                    $response = $this->processConditionalByString($handler);
-                } catch (\Exception $e) {
-                    echo $e->getMessage();
-                    exit;
-                }
-            } elseif($handler instanceof \Closure) {
-                try {
-                    $response = $this->processConditionalByClosure($handler);
-                } catch (\Exception $e) {
-                    echo $e->getMessage();
-                    exit;
-                }
-            } else {
-                throw new \Exception('Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.');
-            }
-            $this->dispatchResponse($response);
-            return false;
-        });
+            });
+        }
     }
 
     /**
-     * Proccess a conditional that was called with an array, like so:
+     * Proccess a add that was called with an array, like so:
      * ['\App\Pages\HomeController', 'index']
      *
      * It will return the output buffer of \App\Pages\HomeController::index();
@@ -170,14 +92,14 @@ class Router
                 throw new \Exception('Class ' . $handler[0] . ' not found.');
             }
         } else {
-            throw new \Exception('If using an array for conditional method, it must contain an array with 2 items: Full path to the controller and method. Example: ["\App\Pages\HomeController", "index"]');
+            throw new \Exception('If using an array for add method, it must contain an array with 2 items: Full path to the controller and method. Example: ["\App\Pages\HomeController", "index"]');
         }
 
         return $response;
     }
 
     /**
-     * Proccess a conditional that was called with an string, like so:
+     * Proccess a add that was called with an string, like so:
      * ['doSomething']
      *
      * It will return the output buffer of function doSomething() {};
@@ -196,7 +118,7 @@ class Router
     }
 
     /**
-     * Proccess a conditional that was called with an closure, like so:
+     * Proccess a add that was called with an closure, like so:
      * function() { echo 'Something' }
      *
      * It will return the output buffer of the closure.
@@ -261,7 +183,7 @@ class Router
             'pings_open'
         ];
         if (!in_array($conditional_tag, $conditional_tags)) {
-            throw new \Exception('Conditional tag "' . $conditional_tag . '" is not valid. Valid conditional tags are: ' . implode(', ', $conditional_tags));
+            throw new \Exception('Conditional tag "' . $conditional_tag . '" is not valid. Valid add tags are: ' . implode(', ', $conditional_tags));
         }
     }
 
@@ -270,7 +192,7 @@ class Router
      *
      * @param $class
      * @param $method
-     * @return boolean
+     * @return bool
      */
     private function isMethodPublic($class, $method)
     {
@@ -283,11 +205,26 @@ class Router
      *
      * @param $class
      * @param $method
-     * @return boolean
+     * @return bool
      */
     private function isMethodStatic($class, $method)
     {
         $reflection = new \ReflectionMethod($class, $method);
         return $reflection->isStatic();
+    }
+
+    /**
+     * Mark a conditional tag as processed
+     *
+     * @param string $conditional_tag
+     * @return bool
+     */
+    private function assertConditionalTagWasNotProcessed(string $conditional_tag)
+    {
+        if (in_array($conditional_tag, $this->processed_conditional_tags)) {
+            return false;
+        }
+        $this->processed_conditional_tags[] = $conditional_tag;
+        return true;
     }
 }
