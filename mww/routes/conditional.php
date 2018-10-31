@@ -1,7 +1,7 @@
 <?php
 
-/** @var $router MWW\Router instance - Don't change it*/
-$router = new MWW\Router;
+/** @var $router ConditionalRouter instance - Don't change it*/
+$router = new MWW\Routes\ConditionalRouter;
 
 /**
  * Use WordPress's Conditional Tags for routing

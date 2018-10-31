@@ -14,7 +14,7 @@ class Core
         $this->setUp();
 
         // Do the magic here
-        require_once('Routes.php');
+        $this->routeRequest();
     }
 
     /**
@@ -63,5 +63,20 @@ class Core
     private function registerShortcodes()
     {
         new Shortcodes\ExampleShortcode;
+    }
+
+    /**
+     * Routes the request in the application
+     */
+    private function routeRequest()
+    {
+        // Conditional Tag Routing (is_front_page, etc)
+        include_once(MWW_PATH . '/routes/conditional.php');
+
+        // Klein router (/something => echo 'something')
+        require_once(MWW_PATH . '/framework/Routes/KleinRouter.php');
+        add_filter('wp-routes/register_routes', function() {
+            klein_with('', MWW_PATH . '/routes/klein.php');
+        });
     }
 }

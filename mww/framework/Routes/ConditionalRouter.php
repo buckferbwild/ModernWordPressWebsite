@@ -1,15 +1,15 @@
 <?php
 
-namespace MWW;
+namespace MWW\Routes;
 
-class Router
+class ConditionalRouter
 {
     /** @var array holds routes to be processed */
     protected $routes = [];
 
     public function __destruct()
     {
-        $this->routes = apply_filters('mww_routes', $this->routes);
+        $this->routes = apply_filters('mww_conditional_routes', $this->routes);
         $this->templateInclude();
     }
 
