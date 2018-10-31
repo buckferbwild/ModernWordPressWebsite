@@ -9,6 +9,7 @@ class Router
 
     public function __destruct()
     {
+        $this->routes = apply_filters('mww_routes', $this->routes);
         $this->templateInclude();
     }
 
@@ -39,10 +40,8 @@ class Router
      */
     public function add(string $conditional_tag, $handler)
     {
-        try {
-            $this->assertValidConditionalTag($conditional_tag);
-        } catch(\Exception $e) {
-            error_log($e->getMessage());
+        if (!function_exists($conditional_tag)) {
+            error_log('The conditional tag "' . $conditional_tag . '"" used for routing does not exist.');
             return;
         }
         $this->enqueueRoute($conditional_tag, $handler);
@@ -53,11 +52,8 @@ class Router
      * @param $handler
      * @return bool
      */
-    private function enqueueRoute(string $conditional_tag, $handler): bool
+    private function enqueueRoute(string $conditional_tag, $handler)
     {
-        if (in_array($conditional_tag, $this->routes)) {
-            return false;
-        }
         $this->routes[$conditional_tag] = $handler;
         return true;
     }
@@ -116,23 +112,24 @@ class Router
     {
         if (count($handler) == 2) {
             if (class_exists(($handler[0]))) {
-                $class = new $handler[0];
+                $class = $handler[0];
                 $method = $handler[1];
+                $classInstance = new $class;
+                $reflection = new \ReflectionMethod($classInstance, $method);
                 // Class exists. Does the method exists?
-                if ($this->isMethodPublic($class, $method)) {
+                if ($reflection->isPublic()) {
                     ob_start();
-                    // Is it static?
-                    if ($this->isMethodStatic($class, $method)) {
-                        $class::$method();
+                    if ($reflection->isStatic()) {
+                        $classInstance::$method();
                     } else {
-                        $class->$method();
+                        $classInstance->$method();
                     }
                     $response = ob_get_clean();
                 } else {
-                    throw new \Exception('Could not call method ' . $handler[1] . ' on class ' . $handler[0] . '. Check if it exists and is public.');
+                    throw new \Exception('Could not call method ' . $method . ' on class ' . $class . '. Check if it exists and is public.');
                 }
             } else {
-                throw new \Exception('Class ' . $handler[0] . ' not found.');
+                throw new \Exception('Class ' . $class . ' not found.');
             }
         } else {
             throw new \Exception('If using an array for add method, it must contain an array with 2 items: Full path to the controller and method. Example: ["\App\Pages\HomeController", "index"]');
@@ -177,60 +174,6 @@ class Router
             throw new \Exception('Couldn\' execute the closure for a route. call_user_func returned false. Double-check the function and make sure it does not return FALSE.');
         }
         return ob_get_clean();
-    }
-
-    /**
-     * Assert that given conditional tag is valid
-     *
-     * @param string $conditional_tag
-     * @throws \Exception
-     * @see https://codex.wordpress.org/Conditional_Tags#Conditional_Tags_Index
-     */
-    private function assertValidConditionalTag(string $conditional_tag)
-    {
-        $conditional_tags = [
-            'comments_open',
-            'has_tag',
-            'has_term',
-            'in_category',
-            'is_404',
-            'is_admin',
-            'is_archive',
-            'is_attachment',
-            'is_author',
-            'is_category',
-            'is_child_theme',
-            'is_comments_popup',
-            'is_customize_preview',
-            'is_date',
-            'is_day',
-            'is_feed',
-            'is_front_page',
-            'is_home',
-            'is_month',
-            'is_multi_author',
-            'is_multisite',
-            'is_main_site',
-            'is_page',
-            'is_page_template',
-            'is_paged',
-            'is_preview',
-            'is_rtl',
-            'is_search',
-            'is_single',
-            'is_singular',
-            'is_sticky',
-            'is_super_admin',
-            'is_tag',
-            'is_tax',
-            'is_time',
-            'is_trackback',
-            'is_year',
-            'pings_open'
-        ];
-        if (!in_array($conditional_tag, $conditional_tags)) {
-            throw new \Exception('Conditional tag "' . $conditional_tag . '" is not valid. Valid add tags are: ' . implode(', ', $conditional_tags));
-        }
     }
 
     /**
