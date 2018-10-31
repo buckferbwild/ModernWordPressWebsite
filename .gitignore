@@ -1,2 +1,4 @@
 /.idea
 /mww/vendor
+/mww/.env
+/mww/tests/_data/dump.sql
