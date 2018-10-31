@@ -8,9 +8,29 @@ class Router
     protected $processed_conditional_tags = [];
 
     /**
-     * Overrides WordPress templating behavior using template_include filter
+     * This is the entry point for adding a Route in MWW.
+     * It overrides WordPress templating behavior using template_include filter
      *
-     * @see https://codex.wordpress.org/Conditional_Tags#Conditional_Tags_Index
+     * It accepts two parameters:
+     *
+     * @param string $conditional_tag One of WordPress's Conditional Tags. Example: "is_front_page".
+     * @param mixed $handler What to do when the conditional tag is met.
+     *
+     * $handler can be of three types:
+     *
+     * Array: ['App\Pages\HomeController', 'index']
+     * Will invoke the method "index" on the class "App\Pages\HomeController"
+     * The method must be public. Can be static or not.
+     *
+     * String: 'doSomething'
+     * Will invoke function doSomething();
+     *
+     * Closure: function() { echo 'Test'; }
+     * Will invoke the closure.
+     *
+     * In all cases, it must echo something!
+     *
+     * @see https://codex.wordpress.org/Plugin_API/Filter_Reference/template_include
      */
     public function add(string $conditional_tag, $handler)
     {
@@ -73,7 +93,6 @@ class Router
         if (count($handler) == 2) {
             if (class_exists(($handler[0]))) {
                 $class = new $handler[0];
-                $className = $handler[0];
                 $method = $handler[1];
                 // Class exists. Does the method exists?
                 if ($this->isMethodPublic($class, $method)) {
@@ -131,14 +150,17 @@ class Router
     {
         ob_start();
         if (call_user_func($handler) === false) {
-            throw new \Exception('Couldn\' execute the anonymous for a route. call_user_func returned false. Double-check the function and make sure it does not return FALSE.');
+            throw new \Exception('Couldn\' execute the closure for a route. call_user_func returned false. Double-check the function and make sure it does not return FALSE.');
         }
         return ob_get_clean();
     }
 
     /**
+     * Assert that given conditional tag is valid
+     *
      * @param string $conditional_tag
      * @throws \Exception
+     * @see https://codex.wordpress.org/Conditional_Tags#Conditional_Tags_Index
      */
     private function assertValidConditionalTag(string $conditional_tag)
     {
