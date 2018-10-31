@@ -14,17 +14,17 @@ $router = new MWW\Router;
  *
  * Generate output by a Class Method:
  * @example $router->add('is_front_page', ['App\Pages\HomeController', 'index']);
- *          Result: Invokes App\Pages\HomeController->index();
+ *          Result: Invokes App\Pages\HomeController->index() if is_front_page
  *
  * Generate output by Closure:
  * @example $router->add('is_front_page', function() {
  *              echo 'Home';
  *          });
- *          Result: 'Home';
+ *          Result: 'Home' if is_front_page
  *
  * Generate output by Function:
  * @example $router->add('is_front_page', 'doSomething');
- *          Result: Invokes doSomething()
+ *          Result: Invokes doSomething() if is_front_page
  *
  * In case a route does not match, it will continue WordPress default loading behavior.
  *
