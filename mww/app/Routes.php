@@ -29,13 +29,16 @@ $router = new MWW\Router;
  * In case a route does not match, it will continue WordPress default loading behavior.
  *
  * In case there are multiple conditional tags of the same kind, ex: two is_front_page,
- * the first one will be processed, while the latter ones are ignored.
+ * the last one will be processed, while the first ones are ignored.
  */
-function doSomething() {
-    echo 'Something';
-}
 $router->add('is_front_page', ['App\Pages\HomeController', 'index']);
-$router->add('is_front_page', 'doSomething');
+
+$router->add('is_front_page', 'routeExample');
+
 $router->add('is_front_page', function() {
     echo 'Closure!';
+});
+
+$router->add('is_404', function() {
+    echo 'Ops! 404!';
 });

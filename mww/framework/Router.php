@@ -4,8 +4,13 @@ namespace MWW;
 
 class Router
 {
-    /** @var array holds which conditional tags were already processed */
-    protected $processed_conditional_tags = [];
+    /** @var array holds routes to be processed */
+    protected $routes = [];
+
+    public function __destruct()
+    {
+        $this->templateInclude();
+    }
 
     /**
      * This is the entry point for adding a Route in MWW.
@@ -37,45 +42,64 @@ class Router
         try {
             $this->assertValidConditionalTag($conditional_tag);
         } catch(\Exception $e) {
-            echo $e->getMessage();
-            exit;
+            error_log($e->getMessage());
+            return;
         }
-        if ($this->assertConditionalTagWasNotProcessed($conditional_tag)) {
-            add_filter('template_include', function () use($conditional_tag, $handler) {
+        $this->enqueueRoute($conditional_tag, $handler);
+    }
+
+    /**
+     * @param string $conditional_tag
+     * @param $handler
+     * @return bool
+     */
+    private function enqueueRoute(string $conditional_tag, $handler): bool
+    {
+        if (in_array($conditional_tag, $this->routes)) {
+            return false;
+        }
+        $this->routes[$conditional_tag] = $handler;
+        return true;
+    }
+
+    /**
+     * @param string $conditional_tag
+     * @param $handler
+     */
+    private function templateInclude()
+    {
+        add_filter('template_include', function ($original) {
+            foreach ($this->routes as $conditional_tag => $handler) {
                 if (call_user_func($conditional_tag)) {
+                    $response = '';
                     if (is_array($handler)) {
                         try {
                             $response = $this->processConditionalByArray($handler);
                         } catch (\Exception $e) {
-                            echo $e->getMessage();
-                            exit;
+                            error_log($e->getMessage());
                         }
                     } elseif (is_string($handler) && function_exists($handler)) {
                         try {
                             $response = $this->processConditionalByString($handler);
                         } catch (\Exception $e) {
-                            echo $e->getMessage();
-                            exit;
+                            error_log($e->getMessage());
                         }
                     } elseif ($handler instanceof \Closure) {
                         try {
                             $response = $this->processConditionalByClosure($handler);
                         } catch (\Exception $e) {
-                            echo $e->getMessage();
-                            exit;
+                            error_log($e->getMessage());
                         }
                     } else {
-                        throw new \Exception('Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.');
+                        error_log('Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.');
                     }
-                    // Return response
                     echo $response;
-                    return false;
-                } else {
-                    // Conditional tag returned false. Continue with WordPress loading...
                     return true;
                 }
-            });
-        }
+            }
+            // If no route found, continue with normal WordPress loading
+            return $original;
+        });
     }
 
     /**
@@ -233,20 +257,5 @@ class Router
     {
         $reflection = new \ReflectionMethod($class, $method);
         return $reflection->isStatic();
-    }
-
-    /**
-     * Mark a conditional tag as processed
-     *
-     * @param string $conditional_tag
-     * @return bool
-     */
-    private function assertConditionalTagWasNotProcessed(string $conditional_tag)
-    {
-        if (in_array($conditional_tag, $this->processed_conditional_tags)) {
-            return false;
-        }
-        $this->processed_conditional_tags[] = $conditional_tag;
-        return true;
     }
 }

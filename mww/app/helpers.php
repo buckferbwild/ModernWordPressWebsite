@@ -53,3 +53,9 @@ function include_view($file, $data = [])
     $template = new MWW\Template;
     $template->include($file, $data);
 }
+
+/** @todo remove this example */
+function routeExample()
+{
+    echo 'Something!';
+}
