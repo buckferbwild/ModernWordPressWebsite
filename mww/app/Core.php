@@ -25,6 +25,7 @@ class Core
         $this->loadHelpers();
         $this->loadAssets();
         $this->registerMenu();
+        $this->registerShortcodes();
         Frontend::removeEmojis();
         Frontend::registerCustomImageSizes();
     }
@@ -54,5 +55,13 @@ class Core
     private function registerMenu()
     {
         register_nav_menu('main-menu', __('Main Menu'));
+    }
+
+    /**
+     * Register shortcodes at App\Shortcodes
+     */
+    private function registerShortcodes()
+    {
+        new Shortcodes\ExampleShortcode;
     }
 }
