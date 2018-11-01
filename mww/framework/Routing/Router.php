@@ -39,7 +39,7 @@ class Router
         {
             // WP-Routes (/something => echo 'something')
             require_once(__DIR__ . '/Libraries/wp-routes.php');
-            add_filter('wp-routes/register_routes', function() {
+            add_filter('wp-routes/register_routes', function() use ($klein_file) {
                 klein_with('', $klein_file);
             });
         }
