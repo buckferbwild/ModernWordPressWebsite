@@ -9,8 +9,10 @@ class RouteConditional
 
     public function __destruct()
     {
-        $this->routes = apply_filters('mww_conditional_routes', $this->routes);
-        $this->templateInclude();
+        add_action('wp', function() {
+            $this->routes = apply_filters('mww_conditional_routes', $this->routes);
+            $this->templateInclude();
+        });
     }
 
     /**
