@@ -14,12 +14,15 @@ class HelloWorldShortcode extends Shortcode {
     public $shortcode = 'hello_world';
 
     /**
-     * Call this shortcode using [hello_world text="Optional"]
+     * Call this shortcode using [hello_world name="Optional"]
      *
      * @param $atts
      * @param null $content
      */
     public function register_shortcode($atts, $content = null) {
-        echo 'Hello ' . !empty($atts['text']) ? 'World!' : $atts['text'];
+        ob_start();
+        $name = !empty($atts['name']) ? $atts['name'] : 'World';
+        echo 'Hello ' . $name;
+        return ob_get_clean();
     }
 }
