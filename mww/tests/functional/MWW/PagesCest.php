@@ -2,17 +2,12 @@
 
 class PagesCest
 {
-
-    public function _before(FunctionalTester $I)
-    {
-    }
-
-    public function _after(FunctionalTester $I)
-    {
-
-    }
-
-    // tests
+    /**
+     * Calling index method on Page should output it's contents
+     *
+     * @param FunctionalTester $I
+     * @throws \Codeception\Exception\ModuleException
+     */
     public function it_should_render_page(FunctionalTester $I)
     {
         $page = <<<PHP
@@ -42,10 +37,16 @@ PHP;
 
         $I->amOnPage('/test_it_should_render_page');
         $I->see('I am a functional testing page!');
+
         $I->deleteMuPluginFile('mww/app/Pages/FunctionalTestPage.php');
     }
 
-    // tests
+    /**
+     * Calling index method on Page which includes a template, should include the template
+     *
+     * @param FunctionalTester $I
+     * @throws \Codeception\Exception\ModuleException
+     */
     public function it_should_render_page_with_template(FunctionalTester $I)
     {
         $template = <<<EOF

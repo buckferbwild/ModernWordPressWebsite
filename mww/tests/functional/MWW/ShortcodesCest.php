@@ -2,12 +2,14 @@
 
 class ShortcodesCest
 {
-    /** @heredoc shortcode */
-    protected $shortcode;
-
+    /**
+     * Creates test shortcode file
+     *
+     * @param FunctionalTester $I
+     */
     public function _before(FunctionalTester $I)
     {
-        $this->shortcode = <<<PHP
+        $shortcode = <<<PHP
 <?php
 namespace App\Shortcodes;
 use MWW\Shortcodes\Shortcode;
@@ -21,18 +23,27 @@ class TestCanAddShortcode extends Shortcode {
     }
 }
 PHP;
+        $I->writeToMuPluginFile('mww/app/Shortcodes/TestCanAddShortcode.php', $shortcode);
     }
 
+    /**
+     * Delete test shortcode file
+     *
+     * @param FunctionalTester $I
+     */
     public function _after(FunctionalTester $I)
     {
         $I->deleteMuPluginFile('mww/app/Shortcodes/TestCanAddShortcode.php');
     }
 
-    // tests
+    /**
+     * Asserts that calling a generated shortcode outputs it's contents
+     *
+     * @param FunctionalTester $I
+     * @throws \Codeception\Exception\ModuleException
+     */
     public function it_should_render_simple_shortcode(FunctionalTester $I)
     {
-        $I->writeToMuPluginFile('mww/app/Shortcodes/TestCanAddShortcode.php', $this->shortcode);
-
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
     klein_with('', function() {
@@ -48,11 +59,14 @@ PHP;
         $I->see('Hi World');
     }
 
-    // tests
+    /**
+     * Asserts that calling a generated output with parameters outputs it's contents
+     *
+     * @param FunctionalTester $I
+     * @throws \Codeception\Exception\ModuleException
+     */
     public function it_should_render_shortcode_atts(FunctionalTester $I)
     {
-        $I->writeToMuPluginFile('mww/app/Shortcodes/TestCanAddShortcode.php', $this->shortcode);
-
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
     klein_with('', function() {

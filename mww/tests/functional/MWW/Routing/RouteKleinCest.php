@@ -2,21 +2,13 @@
 
 class RouteKleinCest
 {
-    public function _before(FunctionalTester $I)
-    {
-    }
-
-    public function _after(FunctionalTester $I)
-    {
-    }
-
     /**
      * Test routing with Klein works
      *
      * @param FunctionalTester $I
      * @throws \Codeception\Exception\ModuleException
      */
-    public function test_routing(FunctionalTester $I)
+    public function it_should_route_a_request_with_klein(FunctionalTester $I)
     {
         $add_filter = <<<PHP
 add_filter('wp-routes/register_routes', function() {
@@ -30,7 +22,6 @@ PHP;
         $I->haveMuPlugin('klein-routes.php', $add_filter);
 
         $I->amOnPage('/testing-routing-with-klein');
-
         $I->see('Klein is fully working!');
     }
 }

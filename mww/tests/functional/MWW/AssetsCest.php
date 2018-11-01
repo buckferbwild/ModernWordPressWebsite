@@ -5,6 +5,11 @@ class AssetsCest
     /** @var heredoc original assets file content */
     protected $original_assets;
 
+    /**
+     * Saves a copy of the original assets file
+     *
+     * @param FunctionalTester $I
+     */
     public function _before(FunctionalTester $I)
     {
         if ($this->original_assets === null) {
@@ -12,12 +17,22 @@ class AssetsCest
         }
     }
 
+    /**
+     * Restores original assets file
+     *
+     * @param FunctionalTester $I
+     */
     public function _after(FunctionalTester $I)
     {
         $I->writeToMuPluginFile('mww/app/Support/assets.php', $this->original_assets);
     }
 
-    // tests
+    /**
+     * Asserts that enqueueing a local style and a local javascript actually outputs them
+     *
+     * @param FunctionalTester $I
+     * @throws \Codeception\Exception\ModuleException
+     */
     public function it_should_enqueue_style_and_javascript(FunctionalTester $I)
     {
         $I->writeToMuPluginFile('mww/public/css/test_it_should_enqueue_style.css', '');
@@ -56,7 +71,12 @@ PHP;
         $I->deleteMuPluginFile('mww/public/js/test_it_should_enqueue_js.js');
     }
 
-    // tests
+    /**
+     * Asserts that enqueuing a remote style and a remote javascript actually outputs them
+     *
+     * @param FunctionalTester $I
+     * @throws \Codeception\Exception\ModuleException
+     */
     public function it_should_enqueue_remote_style_and_javascript(FunctionalTester $I)
     {
         $assets = <<<PHP
@@ -81,7 +101,7 @@ PHP;
         $I->haveMuPlugin('a.php', $add_route);
 
         $I->amOnPage('/it_should_enqueue_style_and_javascript');
-        
+
         $I->seeInSource('http://foo.com/style.css');
         $I->seeInSource('http://foo.com/script.js');
     }
