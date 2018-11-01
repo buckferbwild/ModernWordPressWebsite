@@ -81,6 +81,8 @@ PHP;
 
         $I->amOnPage('/it_should_render_page_with_template');
         $I->see('I am a page with a template!');
+
         $I->deleteMuPluginFile('mww/app/Pages/FunctionalTestPageWithTemplate.php');
+        $I->deleteMuPluginFile('mww/views/functional-testing-page.php');
     }
 }
