@@ -90,7 +90,7 @@ class ConditionalRouter
                         error_log('Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.');
                     }
                     echo $response;
-                    return true;
+                    return false;
                 }
             }
             // If no route found, continue with normal WordPress loading
