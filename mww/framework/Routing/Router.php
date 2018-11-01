@@ -19,10 +19,14 @@ class Router
      */
     private static function loadConditional()
     {
-        // Conditional Tag Routing (is_front_page, etc)
-        /** @var $router RouteConditional instance - Don't change it*/
-        $router = new RouteConditional;
-        include_once(MWW_PATH . '/routes/conditional.php');
+        $conditional_file = MWW_PATH . '/routes/conditional.php';
+        if (file_exists($conditional_file))
+        {
+            // Conditional Tag Routing (is_front_page, etc)
+            /** @var $router RouteConditional instance - Don't change it*/
+            $router = new RouteConditional;
+            include_once($conditional_file);
+        }
     }
 
     /**
@@ -30,10 +34,14 @@ class Router
      */
     private static function loadWPRoutes()
     {
-        // WP-Routes (/something => echo 'something')
-        require_once(__DIR__ . '/Libraries/wp-routes.php');
-        add_filter('wp-routes/register_routes', function() {
-            klein_with('', MWW_PATH . '/routes/klein.php');
-        });
+        $klein_file = MWW_PATH . '/routes/klein.php';
+        if (file_exists($klein_file))
+        {
+            // WP-Routes (/something => echo 'something')
+            require_once(__DIR__ . '/Libraries/wp-routes.php');
+            add_filter('wp-routes/register_routes', function() {
+                klein_with('', $klein_file);
+            });
+        }
     }
 }
