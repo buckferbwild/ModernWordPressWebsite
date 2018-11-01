@@ -1,8 +1,8 @@
 <?php
 
-namespace MWW\Routes;
+namespace MWW\Routing;
 
-class ConditionalRouter
+class RouteConditional
 {
     /** @var array holds routes to be processed */
     protected $routes = [];
@@ -174,31 +174,5 @@ class ConditionalRouter
             throw new \Exception('Couldn\' execute the closure for a route. call_user_func returned false. Double-check the function and make sure it does not return FALSE.');
         }
         return ob_get_clean();
-    }
-
-    /**
-     * Check if given method is public in given class
-     *
-     * @param $class
-     * @param $method
-     * @return bool
-     */
-    private function isMethodPublic($class, $method)
-    {
-        $reflection = new \ReflectionMethod($class, $method);
-        return $reflection->isPublic();
-    }
-
-    /**
-     * Check if given method is static in given class
-     *
-     * @param $class
-     * @param $method
-     * @return bool
-     */
-    private function isMethodStatic($class, $method)
-    {
-        $reflection = new \ReflectionMethod($class, $method);
-        return $reflection->isStatic();
     }
 }

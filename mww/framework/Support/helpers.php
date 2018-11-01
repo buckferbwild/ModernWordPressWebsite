@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Debug Function
  *
@@ -29,17 +28,21 @@ if (!function_exists('is_wp_login')) {
 /**
  * Returns URL for MWW folder
  */
-function get_mww_url()
-{
-    return MWW_URL;
+if (!function_exists('get_mww_url')) {
+    function get_mww_url()
+    {
+        return MWW_URL;
+    }
 }
 
 /**
  * Returns PATH for MWW folder
  */
-function get_mww_path()
-{
-    return MWW_PATH;
+if (!function_exists('get_mww_path')) {
+    function get_mww_path()
+    {
+        return MWW_PATH;
+    }
 }
 
 /**
@@ -48,14 +51,22 @@ function get_mww_path()
  *  @param string $file Name of the view to load
  *  @param array $data Data to be passed to the view
  */
-function include_view($file, $data = [])
-{
-    $template = new MWW\Template;
-    $template->include($file, $data);
+if (!function_exists('include_view')) {
+    function include_view($file, $data = [])
+    {
+        MWW\Templating\Template::include($file, $data);
+    }
 }
 
-/** @todo remove this example */
-function routeExample()
-{
-    echo 'Something!';
+/**
+*   Return wether string ends with string
+*
+*   @param $haystack full string
+*   @param $needle checks if haystack ends in needle
+*   @return bool
+*/
+if (!function_exists('endsWith')) {
+    function endsWith($haystack, $needle) {
+        return substr($haystack,-strlen($needle))===$needle;
+    }
 }

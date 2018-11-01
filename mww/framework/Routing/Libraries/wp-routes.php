@@ -1,15 +1,10 @@
 <?php
 /**
- * Plugin Name: WP Routes
- * Plugin URI: http://theAverageDev.com
- * Description: Easy WordPress routing
- * Version: 1.0
- * Author: Luca Tumedei
- * Author URI: http://theAverageDev.com
- * License: GPL 2.0
+ * This is a port of lucatume/wp-routes
+ * @see https://github.com/lucatume/wp-routes
  */
 
-require_once dirname( __FILE__ ) . '/vendor/wp_klein.php';
+require_once dirname( __FILE__ ) . '/wp_klein.php';
 
 if ( ! function_exists( 'wp_routes_do_parse_request' ) ) {
 	/**

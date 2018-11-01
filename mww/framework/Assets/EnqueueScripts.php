@@ -1,8 +1,8 @@
 <?php
 
-namespace MWW;
+namespace MWW\Assets;
 
-class Frontend
+class EnqueueScripts
 {
     /**
     *   Enqueues a Single CSS
@@ -12,7 +12,7 @@ class Frontend
     *   @param array $dependency Will load after selected handlers
     *   @param string $path      Path to load from, starting from MWW_PATH
     */
-    public static function enqueueStyle(
+    public function enqueueStyle(
         string $file,
         array $dependency = array(),
         string $path = '/public/css/'
@@ -33,7 +33,7 @@ class Frontend
     *   @param string $url       URL of the remote resource
     *   @param array $dependency Will load after selected handlers
     */
-    public static function enqueueRemoteStyle(
+    public function enqueueRemoteStyle(
         string $name,
         string $url,
         array $dependency = array()
@@ -54,7 +54,7 @@ class Frontend
     *   @param string $path       Path to load from, starting from MWW_PATH
     *   @param boolean $in_footer Wether to load the script in the footer or not
     */
-    public static function enqueueJavascript(
+    public function enqueueJavascript(
         string $file,
         array $dependency = array('jquery'),
         string $path = '/public/js/',
@@ -76,7 +76,7 @@ class Frontend
     *   @param array $dependency  Will load after selected handlers
     *   @param boolean $in_footer Wether to load the script in the footer or not
     */
-    public static function enqueueRemoteJavascript(
+    public function enqueueRemoteJavascript(
         string $name,
         string $url,
         array $dependency = array('jquery'),
@@ -89,44 +89,5 @@ class Frontend
             null,
             $in_footer
         );
-    }
-
-    /**
-     * Removes WordPress emojis
-     * https://wordpress.stackexchange.com/a/185578/27278
-     */
-    public static function removeEmojis()
-    {
-          // all actions related to emojis
-          remove_action('admin_print_styles', 'print_emoji_styles');
-          remove_action('wp_head', 'print_emoji_detection_script', 7);
-          remove_action('admin_print_scripts', 'print_emoji_detection_script');
-          remove_action('wp_print_styles', 'print_emoji_styles');
-          remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
-          remove_filter('the_content_feed', 'wp_staticize_emoji');
-          remove_filter('comment_text_rss', 'wp_staticize_emoji');
-
-          // Remove DNS prefetch
-          add_filter('emoji_svg_url', '__return_false');
-    }
-
-    /**
-    *   Enables and registers custom image sizes
-    */
-    public static function registerCustomImageSizes()
-    {
-        add_theme_support('post-thumbnails');
-
-        add_image_size('col-12', 1170, 9999, false);
-        add_image_size('col-12-crop', 1170, 9999, true);
-
-        add_image_size('col-6', 585, 9999, false);
-        add_image_size('col-6-crop', 585, 9999, true);
-
-        add_image_size('col-4', 390, 9999, false);
-        add_image_size('col-4-crop', 390, 9999, true);
-
-        add_image_size('col-3', 292, 9999, false);
-        add_image_size('col-3-crop', 292, 9999, true);
     }
 }

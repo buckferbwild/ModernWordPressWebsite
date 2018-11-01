@@ -2,12 +2,14 @@
 
 namespace App\Pages;
 
-class HomeController extends Abstracts\PagesController
+use MWW\Pages\Page;
+
+class NotFound extends Page
 {
     public function index()
     {
         $this->template->include('partials.header');
-        $this->template->include('pages.home');
+        $this->template->include('pages.404');
         $this->template->include('partials.footer');
     }
 }

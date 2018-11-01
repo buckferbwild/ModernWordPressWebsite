@@ -3,14 +3,14 @@
  * Plugin Name: Modern WordPress Website
  * Plugin URI: https://github.com/Luc45/Modern-WordPress-Website
  * Description: This project is using Modern WordPress Website (MWW).
- * Version: 1.0
+ * Version: 1.0.0
  * Author: Lucas Bustamante
  * Author URI: https://www.lucasbustamante.com.br
  * License: GPL2
  */
 
-/** This file contains the bare-minimum code to run the Core class. */
-use App\Core;
+/** This file contains the bare-minimum code to run the Bootstrap class. */
+use App\Bootstrap;
 
 /**
  *  Subfolder in mu-plugins folder that holds the project.
@@ -28,5 +28,5 @@ if (file_exists(MWW_PATH .'/vendor/autoload.php')) {
 }
 
 /** Run the Application */
-$mww = new Core();
+$mww = new Bootstrap();
 $mww->run();

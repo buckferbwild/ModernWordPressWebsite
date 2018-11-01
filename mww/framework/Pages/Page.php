@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Pages\Abstracts;
+namespace MWW\Pages;
 
-use MWW\Template;
+use MWW\Templating\Template;
 
-abstract class PagesController
+abstract class Page
 {
     /**
-     * MWW\Template instance
+     * Template instance
      */
     protected $template;
 
