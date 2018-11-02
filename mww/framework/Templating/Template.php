@@ -22,16 +22,16 @@ class Template
             if (!empty($hook)) {
                 do_action($hook);
             }
-            // Merge our $data into $wp_query->query_vars so it's available with load_template
-            if (!empty($data)) {
+            if (empty($data)) {
+                load_template($file_path, false);
+            } else {
+                // Merge our $data into $wp_query->query_vars so it's available with load_template
                 global $wp_query;
                 $original = $wp_query->query_vars;
                 $this->checkForQueryVarsConflicts($original, $data);
                 $wp_query->query_vars = array_merge($original, $data);
-                load_template($file_path);
-                $wp_query->query_vars = $original;
-            } else {
                 load_template($file_path, false);
+                $wp_query->query_vars = $original;
             }
         } else {
             if (defined('WP_DEBUG') && WP_DEBUG) {
