@@ -2,6 +2,7 @@
 /**
  * Debug Function
  *
+ * @param mixed $debug
  * @example dd($var);
  * @example dd([$var1, $var2]);
  */
@@ -47,9 +48,10 @@ if (!function_exists('mww_public')) {
  *  @param array $data Data to be passed to the view
  */
 if (!function_exists('include_view')) {
-    function include_view($file, $data = [])
+    function include_view(string $file, array $data = [])
     {
-        MWW\Templating\Template::include($file, $data);
+        $template = new MWW\Templating\Template;
+        $template->include($file, $data);
     }
 }
 
@@ -61,7 +63,7 @@ if (!function_exists('include_view')) {
 *   @return bool
 */
 if (!function_exists('endsWith')) {
-    function endsWith($haystack, $needle) {
+    function endsWith(string $haystack, string $needle) {
         return substr($haystack,-strlen($needle))===$needle;
     }
 }
