@@ -86,4 +86,50 @@ PHP;
         $I->deleteMuPluginFile('mww/app/Pages/FunctionalTestPageWithTemplate.php');
         $I->deleteMuPluginFile('mww/views/functional-testing-page.php');
     }
+
+    /**
+     * Calling index method on Page which includes a template, should include the template and pass parameters to the view
+     *
+     * @param FunctionalTester $I
+     * @throws \Codeception\Exception\ModuleException
+     */
+    public function it_should_render_page_with_template_and_pass_parameters_to_view(FunctionalTester $I)
+    {
+        $template = <<<PHP
+I am a page with a template with this data: <?php echo \$data ?>
+PHP;
+
+        $I->writeToMuPluginFile('mww/views/functional-testing-page-with-parameters.php', $template);
+
+        $page = <<<PHP
+<?php
+namespace App\Pages;
+use MWW\Pages\Page;
+class FunctionalTestPageWithTemplateWithParameters extends Page {
+    public function index() {
+        \$this->template->include('functional-testing-page-with-parameters', ['data' => 'Working']);
+    }
+}
+PHP;
+
+        $I->writeToMuPluginFile('mww/app/Pages/FunctionalTestPageWithTemplateWithParameters.php', $page);
+
+        $add_route = <<<PHP
+add_filter('wp-routes/register_routes', function() {
+    klein_with('', function() {
+        klein_respond('GET', '/it_should_render_page_with_template_with_parameters', function() {
+            \$page = new App\Pages\FunctionalTestPageWithTemplateWithParameters;
+            \$page->index();
+        });
+    });
+});
+PHP;
+        $I->haveMuPlugin('a.php', $add_route);
+
+        $I->amOnPage('/it_should_render_page_with_template_with_parameters');
+        $I->see('I am a page with a template with this data: Working');
+
+        $I->deleteMuPluginFile('mww/app/Pages/FunctionalTestPageWithTemplateWithParameters.php');
+        $I->deleteMuPluginFile('mww/views/functional-testing-page-with-parameters.php');
+    }
 }
