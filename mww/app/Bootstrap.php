@@ -29,8 +29,8 @@ class Bootstrap
         Setup::themeSupports(['post-thumbnails']);
 
         // Optional
-        register_nav_menu('main-menu', __('Main Menu'));
-        Setup::removeEmojis();
+        //Setup::removeEmojis();
+        //register_nav_menu('main-menu', __('Main Menu'));
         //Setup::registerBootstrapImageSizes();
     }
 }
