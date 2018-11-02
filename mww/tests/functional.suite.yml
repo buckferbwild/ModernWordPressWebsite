@@ -6,7 +6,7 @@
 actor: FunctionalTester
 modules:
     enabled:
-        - WPDb
+        #- WPDb
         - WPBrowser
         - WPFilesystem
         - Asserts
