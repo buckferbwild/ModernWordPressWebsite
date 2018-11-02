@@ -26,22 +26,17 @@ if (!function_exists('is_wp_login')) {
 }
 
 /**
- * Returns URL for MWW folder
+ * Returns URL for MWW Public folder
+ *
+ * @param string $file Optionally, you can pass a public file to get it's URL
  */
-if (!function_exists('get_mww_url')) {
-    function get_mww_url()
+if (!function_exists('mww_public')) {
+    function mww_public(string $file = '')
     {
-        return MWW_URL;
-    }
-}
-
-/**
- * Returns PATH for MWW folder
- */
-if (!function_exists('get_mww_path')) {
-    function get_mww_path()
-    {
-        return MWW_PATH;
+        if (!empty($file)) {
+            return MWW_URL . '/public/' . $file;
+        }
+        return MWW_URL . '/public/';
     }
 }
 

@@ -19,9 +19,9 @@ class EnqueueScripts
     ) {
         wp_enqueue_style(
             $file,
-            get_mww_url() . $path . $file,
+            MWW_URL . $path . $file,
             $dependency,
-            filemtime(get_mww_path() . $path . $file)
+            filemtime(MWW_PATH . $path . $file)
         );
     }
 
@@ -62,9 +62,9 @@ class EnqueueScripts
     ) {
         wp_enqueue_script(
             $file,
-            get_mww_url() . $path . $file,
+            MWW_URL . $path . $file,
             $dependency,
-            filemtime(get_mww_path() . $path . $file),
+            filemtime(MWW_PATH . $path . $file),
             $in_footer
         );
     }
