@@ -31,7 +31,7 @@ class Template
                 load_template($file_path);
                 $wp_query->query_vars = $original;
             } else {
-                load_template($file_path);
+                load_template($file_path, false);
             }
         } else {
             if (defined('WP_DEBUG') && WP_DEBUG) {
@@ -44,13 +44,12 @@ class Template
     }
 
     /**
-    * Since we are using load_template function, we need to pass our custom data to
-    * $wp_query->query_vars to be extracted into the view.
+    * Warns for conflicts with $data and $wp_query->query_vars
     */
-    private function checkForQueryVarsConflicts($wp_query, $data)
+    private function checkForQueryVarsConflicts($query_vars, $data)
     {
         foreach ($data as $key => &$value) {
-        if (array_key_exists($key, $wp_query)) {
+        if (array_key_exists($key, $query_vars)) {
             $message = 'You should rename variable "' . $key . '", as it conflicts with existing $wp_query->query_vars["' . $key . '"] key.';
             error_log($message);
             if (defined('WP_DEBUG') && WP_DEBUG) {
