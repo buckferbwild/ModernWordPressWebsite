@@ -1,35 +1,24 @@
-
 <p align="center"><img src="https://www.lucasbustamante.com.br/wp-content/uploads/2018/10/mww-logo.svg"></p>
-
-## Before we begin
-
-This is an extremely experimental project. Play with it, understand it's concepts, but take care using it in production. I'm not sure how it will play out with all the plugins out there. The idea is to bring an MVC experience to WordPress, similar to Laravel, and also allow for fast API responses with small WordPress overhead. This is recommended for experienced developers to play around and try new stuff.
-
-When it's OK to use this project:
-
-- If you are an experienced developer, or an intermediate developer who wants to expand your knowledge
-- You are OK not using a theme and building the website from scratch using HTML (Similar to Laravel)
-- You are aware this is BETA and experimental
 
 ## About Modern WordPress Website
 
 Modern WordPress Website (MWW) is a modern way of building WordPress websites.<br/>
-Simple, unopiniated and powerful, it's a great skeleton to bootstrap a new WordPress project.
+Simple and powerful, it's a great skeleton to bootstrap a new WordPress project.
 
-- True MVC experience in WordPress.
+- MVC in WordPress.
 - Simple route engine with native WordPress functions.
 - Modern, yet simple PHP.
 - PSR-4 Autoloading.
-- Only 20 files and 15kb in size (Approximately).
+- Integrated with Acceptance, Functional, Integration and Unit tests (Thanks to Luca Tume, from wp-browser)
 - Installs as a *mu-plugin*
 
 Modern WordPress Website (MWW) is great for experienced PHP developers using WordPress, and for intermediate developers who want to take their skills to the next level.
 
 ## Building a Small Project
 
-[![Click to watch on YouTube](https://img.youtube.com/vi/cQKBLWGM-uE/0.jpg)](https://www.youtube.com/watch?v=cQKBLWGM-uE)
+[![Click to watch on YouTube](https://img.youtube.com/vi/w2uH_Ae-lhc/0.jpg)](https://www.youtube.com/watch?v=w2uH_Ae-lhc)
 
-[(Click to watch on YouTube)](https://www.youtube.com/watch?v=cQKBLWGM-uE)
+[(Click to watch on YouTube)](https://www.youtube.com/watch?v=w2uH_Ae-lhc)
 
 ## Building a Small Project (Português PT-BR)
 
@@ -39,7 +28,7 @@ Modern WordPress Website (MWW) is great for experienced PHP developers using Wor
 
 ## Installation
 
-Despite being a Theme in practical terms, *Modern WordPress Website* is installed as a mu-plugin. This way we intercept WordPress requests at an earlier stage and have more control over the application.
+*Modern WordPress Website* is installed as a mu-plugin. This way we intercept WordPress requests at an earlier stage and have more control over the application.
 
 To get started, simply follow these steps in a clean WordPress installation:
 
@@ -52,44 +41,23 @@ Now it's up to you to create awesome stuff!
 
 ## How it works
 
-MWW brings a true MVC experience to WordPress. It is installed as a mu-plugin. With it, you don't need a theme.
-
-Even though MWW is powerful, it's also very simple. The src folder, which contains the logic of MWW contains only 8 files.
-
-The heart of MWW is the routing system. It works like this:
+Even though MWW is powerful, it's also very simple. It all starts with the routes:
 
 ```php
-/**
- * Routes the request to the appropriate Controller
- */
-public function routeRequest()
-{
-    add_filter('template_include', function () {
-        ob_start();
-
-        if (is_front_page()) {
-            $page = new HomeController;
-        } else {
-            $page = new NotFoundController;
-        }
-
-        $page->output();
-
-        echo ob_get_clean();
-        return false;
-    });
-}
+$router->add('is_front_page', ['App\Pages\Home', 'index']);
 ```
 
-We perform checks using native WordPress functions such as is_front_page() to load the appropriate controller, then we call the method output() on it. Let's take a look at HomeController output method:
+Then, at app/pages/Home.php:
 
 ```php
-// HomeController
-public function output()
+class Home extends Page
 {
-    $this->template->include('partials.header');
-    $this->template->include('pages.home');
-    $this->template->include('partials.footer');
+    public function index()
+    {
+        $this->template->include('header');
+        $this->template->include('pages.home');
+        $this->template->include('footer');
+    }
 }
 ```
 
@@ -98,14 +66,13 @@ We are loading a header, the home page content and the footer.
 What if we want to show Posts on our Home page?
 
 Well, we can do just this:
+
 ```php
 // HomeController
 public function output()
 {
-    $posts = get_posts();
-
     $this->template->include('partials.header');
-    $this->template->include('pages.home', ['posts' => $posts]);
+    $this->template->include('pages.home', ['posts' => get_posts()]);
     $this->template->include('partials.footer');
 }
 ```
