@@ -27,8 +27,9 @@ Modern WordPress Website (MWW) is great for experienced PHP developers using Wor
 To get started, simply follow these steps in a clean WordPress installation:
 
 - Run `git clone https://github.com/Luc45/ModernWordPressWebsite wp-content/mu-plugins` in the root folder of a clean WordPress installation
-- Run `composer update` inside the recently created **wp-content/mu-plugins/mww/** folder to generate the autoload files.
+- Run `composer update` in **wp-content/mu-plugins/mww/**
 - (Recommended) You will not need your theme anymore, you can create an empty theme with just index.php, style.css and functions.php. [Download empty theme](https://github.com/Luc45/EmptyTheme/archive/master.zip).
+- (Recommended) Set up tests by editing .env.example and renaming it to .env - Run tests with `vendor/bin/codecept run`
 
 Now it's up to you to create awesome stuff!
 
