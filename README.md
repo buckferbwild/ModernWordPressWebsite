@@ -20,21 +20,14 @@ Modern WordPress Website (MWW) is great for experienced PHP developers using Wor
 
 [(Click to watch on YouTube)](https://www.youtube.com/watch?v=w2uH_Ae-lhc)
 
-## Building a Small Project (Português PT-BR)
-
-[![Click to watch on YouTube](https://img.youtube.com/vi/NGQ2siW5DwI/0.jpg)](https://www.youtube.com/watch?v=NGQ2siW5DwI)
-
-[(Click to watch on YouTube)](https://www.youtube.com/watch?v=NGQ2siW5DwI)
-
 ## Installation
 
 *Modern WordPress Website* is installed as a mu-plugin. This way we intercept WordPress requests at an earlier stage and have more control over the application.
 
 To get started, simply follow these steps in a clean WordPress installation:
 
-- Create wp-content/**mu-plugins** folder.
-- Run `git clone https://github.com/Luc45/ModernWordPressWebsite .` inside **mu-plugins** folder.
-- Run `composer update` inside the recently created **mu-plugins/mww/** folder to generate the autoload files.
+- Run `git clone https://github.com/Luc45/ModernWordPressWebsite wp-content/mu-plugins` in the root folder of a clean WordPress installation
+- Run `composer update` inside the recently created **wp-content/mu-plugins/mww/** folder to generate the autoload files.
 - (Recommended) You will not need your theme anymore, you can create an empty theme with just index.php, style.css and functions.php. [Download empty theme](https://github.com/Luc45/EmptyTheme/archive/master.zip).
 
 Now it's up to you to create awesome stuff!
@@ -44,12 +37,14 @@ Now it's up to you to create awesome stuff!
 Even though MWW is powerful, it's also very simple. It all starts with the routes:
 
 ```php
+// routes/conditional.php
 $router->add('is_front_page', ['App\Pages\Home', 'index']);
 ```
 
-Then, at app/pages/Home.php:
+If is_front_page() is true, then call method index on App\Pages\Home:
 
 ```php
+// app/pages/Home.php
 class Home extends Page
 {
     public function index()
@@ -61,22 +56,27 @@ class Home extends Page
 }
 ```
 
-We are loading a header, the home page content and the footer.
+Here, we are including the header, the home page content and the footer.
 
-What if we want to show Posts on our Home page?
+That's all we need to get started!
 
-Well, we can do just this:
+Of course that modern applications uses a lot of dynamic data, not only static views. Here's how we can show Posts on the Home page:
 
 ```php
-// HomeController
-public function output()
+// app/pages/Home.php
+class Home extends Page
 {
-    $this->template->include('partials.header');
-    $this->template->include('pages.home', ['posts' => get_posts()]);
-    $this->template->include('partials.footer');
+    public function index()
+    {
+        $this->template->include('header');
+        $this->template->include('pages.home', [
+            'posts' => get_posts()
+        ]);
+        $this->template->include('footer');
+    }
 }
 ```
-Then, we have a variable in our home view with all the posts. Let's use it:
+Then, we have a variable `$posts` in our home view with the content of `get_posts()`:
 ```php
 // views/pages/home.php
 foreach ($posts as $post) {
@@ -84,7 +84,7 @@ foreach ($posts as $post) {
 }
 ```
 
-You see? We could easily separate the logic, we don't need to use get_posts() in our view, we can do it in the Controller (or create a model class) and pass it digested to the view. This way, it is easier for our application to grow organized.
+You see? This is MVC. We could easily separate the logic - we don't need to use get_posts() in our view, we can do it in the Controller (or create a model for it) and pass it digested to the view. This way, it is easier for our application to grow organized.
 
 ## Contributing
 
