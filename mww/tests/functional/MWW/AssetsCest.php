@@ -3,7 +3,7 @@
 class AssetsCest
 {
     /** @var heredoc original assets file content */
-    protected $original_assets;
+    protected $original_assets = 'first';
 
     /**
      * Saves a copy of the original assets file
@@ -12,9 +12,21 @@ class AssetsCest
      */
     public function _before(FunctionalTester $I)
     {
-        if ($this->original_assets === null) {
+        if ($this->original_assets === 'first') {
             $this->original_assets = file_get_contents($I->getWpRootFolder() . '/wp-content/mu-plugins/mww/app/Support/assets.php');
         }
+        $add_route = <<<PHP
+add_filter('wp-routes/register_routes', function() {
+    klein_with('/', function() {
+        klein_respond('GET', 'test_output_wp_head_wp_footer', function() {
+            wp_head();
+            wp_footer();
+        });
+    });
+});
+PHP;
+
+        $I->haveMuPlugin('a.php', $add_route);
     }
 
     /**
@@ -39,6 +51,7 @@ class AssetsCest
         $I->writeToMuPluginFile('mww/public/js/test_it_should_enqueue_js.js', '');
 
         $assets = <<<PHP
+<?php
 add_action('wp_enqueue_scripts', function() use (\$assets)
 {
     \$assets->enqueueStyle('test_it_should_enqueue_style.css');
@@ -48,18 +61,8 @@ PHP;
 
         $I->writeToMuPluginFile('mww/app/Support/assets.php', $assets);
 
-        $add_route = <<<PHP
-add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/it_should_enqueue_style_and_javascript', function() {
-            wp_head();
-        });
-    });
-});
-PHP;
-        $I->haveMuPlugin('a.php', $add_route);
 
-        $I->amOnPage('/it_should_enqueue_style_and_javascript');
+        $I->amOnPage('/test_output_wp_head_wp_footer');
 
         //$I->see(\Codeception\Util\Locator::contains('link', 'test_it_should_enqueue_style.css'));
         //$I->see(\Codeception\Util\Locator::contains('script', 'test_it_should_enqueue_js.css'));
@@ -80,6 +83,7 @@ PHP;
     public function it_should_enqueue_remote_style_and_javascript(FunctionalTester $I)
     {
         $assets = <<<PHP
+<?php
 add_action('wp_enqueue_scripts', function() use (\$assets)
 {
     \$assets->enqueueRemoteStyle('foo', 'http://foo.com/style.css');
@@ -89,18 +93,7 @@ PHP;
 
         $I->writeToMuPluginFile('mww/app/Support/assets.php', $assets);
 
-        $add_route = <<<PHP
-add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/it_should_enqueue_style_and_javascript', function() {
-            wp_head();
-        });
-    });
-});
-PHP;
-        $I->haveMuPlugin('a.php', $add_route);
-
-        $I->amOnPage('/it_should_enqueue_style_and_javascript');
+        $I->amOnPage('/test_output_wp_head_wp_footer');
 
         $I->seeInSource('http://foo.com/style.css');
         $I->seeInSource('http://foo.com/script.js');

@@ -25,17 +25,18 @@ PHP;
 
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/test_it_should_render_page', function() {
+    klein_with('/', function() {
+        klein_respond('GET', 'test_it_should_render_page', function() {
             \$page = new App\Pages\FunctionalTestPage;
             \$page->index();
         });
     });
 });
 PHP;
+
         $I->haveMuPlugin('a.php', $add_route);
 
-        $I->amOnPage('/test_it_should_render_page');
+        $I->amOnPage('test_it_should_render_page');
         $I->see('I am a functional testing page!');
 
         $I->deleteMuPluginFile('mww/app/Pages/FunctionalTestPage.php');
@@ -70,8 +71,8 @@ PHP;
 
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/it_should_render_page_with_template', function() {
+    klein_with('/', function() {
+        klein_respond('GET', 'it_should_render_page_with_template', function() {
             \$page = new App\Pages\FunctionalTestPageWithTemplate;
             \$page->index();
         });
@@ -116,8 +117,8 @@ PHP;
 
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/it_should_render_page_with_template_with_parameters', function() {
+    klein_with('/', function() {
+        klein_respond('GET', 'it_should_render_page_with_template_with_parameters', function() {
             \$page = new App\Pages\FunctionalTestPageWithTemplateWithParameters;
             \$page->index();
         });

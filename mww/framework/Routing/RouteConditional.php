@@ -7,10 +7,20 @@ class RouteConditional
     /** @var array holds routes to be processed */
     protected $routes = [];
 
+    /**
+    *   Filters and processes the routes
+    */
     public function __destruct()
     {
         add_action('wp', function() {
-            $this->routes = apply_filters('mww_conditional_routes', $this->routes);
+            $new_routes = apply_filters('mww_conditional_routes', []);
+            foreach ($new_routes as $new_route) {
+                foreach ($this->routes as $key => &$route) {
+                    if ($route['conditional_tag'] == $new_route['conditional_tag']) {
+                        $this->routes[$key] = $new_route;
+                    }
+                }
+            }
             $this->templateInclude();
         });
     }
@@ -42,21 +52,68 @@ class RouteConditional
      */
     public function add(string $conditional_tag, $handler)
     {
-        if (!function_exists($conditional_tag)) {
-            error_log('The conditional tag "' . $conditional_tag . '"" used for routing does not exist.');
+        $conditional_tag = $this->normalizeConditionalTag($conditional_tag);
+        if ($this->assertConditionalIsCallable($conditional_tag)) {
+            $this->enqueueRoute($conditional_tag, $handler);
+        } else {
+            $message = 'The conditional tag "' . $conditional_tag . '" used for routing does not exist.';
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                echo $message;
+            }
+            error_log('The conditional tag "' . $conditional_tag . '" used for routing does not exist.');
             return;
         }
-        $this->enqueueRoute($conditional_tag, $handler);
     }
 
     /**
-     * @param string $conditional_tag
+    *   Transforms is_page("Something") into ['is_page', 'something']
+    *   or just return if it's a string already
+    *
+    *   @param string $conditional_tag
+    *   @return mixed $conditional_tag
+    */
+    private function normalizeConditionalTag(string $conditional_tag)
+    {
+        if (strpos($conditional_tag, '(')) {
+            // Normalize quotes
+            str_replace('\'', '"', $conditional_tag);
+            // Get function name
+            $function_name = explode('(', $conditional_tag);
+            $function_name = array_shift($function_name);
+            // Get parameters
+            if (preg_match('/"([^"]+)"/', $conditional_tag, $result)) {
+                $parameter = $result[1];
+            }
+            $conditional_tag = [$function_name, $parameter];
+        }
+        return $conditional_tag;
+    }
+
+    /**
+    *   Asserts a conditional tag function is callable
+    *
+    *   @param mixed $conditional_tag can be either a string or an array
+    *   @return bool
+    */
+    private function assertConditionalIsCallable($conditional_tag)
+    {
+        if (is_array($conditional_tag)) {
+            $conditional_tag = $conditional_tag[0];
+        }
+        return function_exists($conditional_tag);
+    }
+
+    /**
+     * @param mixed $conditional_tag
      * @param $handler
      * @return bool
      */
-    private function enqueueRoute(string $conditional_tag, $handler)
+    private function enqueueRoute($conditional_tag, $handler)
     {
-        $this->routes[$conditional_tag] = $handler;
+        $this->routes[] = [
+            'conditional_tag' => $conditional_tag,
+            'handler' => $handler
+        ];
         return true;
     }
 
@@ -67,24 +124,27 @@ class RouteConditional
     private function templateInclude()
     {
         add_filter('template_include', function ($original) {
-            foreach ($this->routes as $conditional_tag => $handler) {
-                if (call_user_func($conditional_tag)) {
+            foreach ($this->routes as $route) {
+                if (
+                    is_string($route['conditional_tag']) && call_user_func($route['conditional_tag']) ||
+                    is_array($route['conditional_tag']) && call_user_func($route['conditional_tag'][0], $route['conditional_tag'][1])
+                ) {
                     $response = '';
-                    if (is_array($handler)) {
+                    if (is_array($route['handler'])) {
                         try {
-                            $response = $this->processConditionalByArray($handler);
+                            $response = $this->processConditionalByArray($route['handler']);
                         } catch (\Exception $e) {
                             error_log($e->getMessage());
                         }
-                    } elseif (is_string($handler) && function_exists($handler)) {
+                    } elseif (is_string($route['handler']) && function_exists($route['handler'])) {
                         try {
-                            $response = $this->processConditionalByString($handler);
+                            $response = $this->processConditionalByString($route['handler']);
                         } catch (\Exception $e) {
                             error_log($e->getMessage());
                         }
-                    } elseif ($handler instanceof \Closure) {
+                    } elseif ($route['handler'] instanceof \Closure) {
                         try {
-                            $response = $this->processConditionalByClosure($handler);
+                            $response = $this->processConditionalByClosure($route['handler']);
                         } catch (\Exception $e) {
                             error_log($e->getMessage());
                         }
@@ -113,15 +173,15 @@ class RouteConditional
     private function processConditionalByArray(array $handler)
     {
         if (count($handler) == 2) {
-            if (class_exists(($handler[0]))) {
-                $class = $handler[0];
-                $method = $handler[1];
+            $class = $handler[0];
+            $method = $handler[1];
+            if (class_exists(($class))) {
                 $classInstance = new $class;
-                $reflection = new \ReflectionMethod($classInstance, $method);
+                $reflectionMethod = new \ReflectionMethod($classInstance, $method);
                 // Class exists. Does the method exists?
-                if ($reflection->isPublic()) {
+                if ($reflectionMethod->isPublic()) {
                     ob_start();
-                    if ($reflection->isStatic()) {
+                    if ($reflectionMethod->isStatic()) {
                         $classInstance::$method();
                     } else {
                         $classInstance->$method();

@@ -18,7 +18,10 @@ class Foo {
     }
 }
 add_filter('mww_conditional_routes', function(\$routes) {
-    \$routes['is_front_page'] = ['Foo', 'Bar'];
+    \$routes[] = [
+        'conditional_tag' => 'is_front_page',
+        'handler' => ['Foo', 'Bar']
+    ];
     return \$routes;
 });
 PHP;
@@ -41,7 +44,10 @@ function test_routing() {
     echo 'Route tested!';
 }
 add_filter('mww_conditional_routes', function(\$routes) {
-    \$routes['is_front_page'] = 'test_routing';
+    \$routes[] = [
+        'conditional_tag' => 'is_front_page',
+        'handler' => 'test_routing'
+    ];
     return \$routes;
 });
 PHP;
@@ -61,9 +67,12 @@ PHP;
     {
         $code = <<<PHP
 add_filter('mww_conditional_routes', function(\$routes) {
-    \$routes['is_front_page'] = function() {
-        echo 'Closure is working!';
-    };
+    \$routes[] = [
+        'conditional_tag' => 'is_front_page',
+        'handler' => function() {
+            echo 'Closure is working!';
+        }
+    ];
     return \$routes;
 });
 PHP;
