@@ -11,8 +11,24 @@ class Template
      *  @param array $data Data to be passed to the view
      *  @param string $hook_to_fire Fires this hook upon loading this template
      */
-    public function include($file, $data = [], string $hook_to_fire = '')
+    public function include(string $file, array $data = [], string $hook_to_fire = '')
     {
+        // Globals from load_template function from wp-includes/template.php
+        global $posts, $post, $wp_did_header, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
+
+        // Warn for conflicting vars
+        if (!empty($data)) {
+            $this->warnForGlobalVarConflicts($data, $file);
+        }
+
+        // Extract without conflict
+        extract($data, EXTR_SKIP);
+
+        // Sanitize search
+        if (isset($s)) {
+            $s = esc_attr($s);
+        }
+
         // Allows for subdirectory includes, such as "partials.header"
         $file = str_replace('.', '/', $file);
 
@@ -22,20 +38,12 @@ class Template
             if (!empty($hook)) {
                 do_action($hook);
             }
-            if (empty($data)) {
-                load_template($file_path, false);
-            } else {
-                // Merge our $data into $wp_query->query_vars so it's available with load_template
-                global $wp_query;
-                $original = $wp_query->query_vars;
-                $this->checkForQueryVarsConflicts($original, $data);
-                $wp_query->query_vars = array_merge($original, $data);
-                load_template($file_path, false);
-                $wp_query->query_vars = $original;
-            }
+            require($file_path);
         } else {
+            $message = 'Error loading view: '.$file;
+            error_log($message);
             if (defined('WP_DEBUG') && WP_DEBUG) {
-                echo 'Error loading view: '.$file.'<br>';
+                echo $message.'<br>';
                 if (endswith($file, '/php')) {
                     echo 'Maybe you meant to add <strong>' . rtrim($file, '/php') . '</strong> instead?<br>';
                 }
@@ -44,18 +52,23 @@ class Template
     }
 
     /**
-    * Warns for conflicts with $data and $wp_query->query_vars
+    * Warns for conflicts with $data and WordPress globals
+    *
+    * @todo test warnForGlobalVarConflicts
+    * @param array $data data being passed to the view
+    * @param string $file file to which this data is being passed
     */
-    private function checkForQueryVarsConflicts($query_vars, $data)
+    private function warnForGlobalVarConflicts(array $data, string $file)
     {
-        foreach ($data as $key => &$value) {
-        if (array_key_exists($key, $query_vars)) {
-            $message = 'You should rename variable "' . $key . '", as it conflicts with existing $wp_query->query_vars["' . $key . '"] key.';
-            error_log($message);
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                echo $message;
+        $globals = ['posts', 'post', 'wp_did_header', 'wp_query', 'wp_rewrite', 'wpdb', 'wp_version', 'wp', 'id', 'comment', 'user_ID'];
+        foreach ($data as $key => $value) {
+            if (in_array($key, $globals)) {
+                $message = 'You must rename variable "' . $key . '", as it conflicts with existing WordPress global $' . $key . ' (being passed to view ' . $file . ')';
+                error_log($message);
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    echo $message;
+                }
             }
         }
-    }
     }
 }
