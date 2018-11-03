@@ -21,8 +21,8 @@ class RouteConditional
                     }
                 }
             }
-            $this->templateInclude();
         });
+        $this->templateInclude();
     }
 
     /**
@@ -125,35 +125,44 @@ class RouteConditional
     {
         add_filter('template_include', function ($original) {
             foreach ($this->routes as $route) {
-                if (
-                    is_string($route['conditional_tag']) && call_user_func($route['conditional_tag']) ||
-                    is_array($route['conditional_tag']) && call_user_func($route['conditional_tag'][0], $route['conditional_tag'][1])
-                ) {
-                    $response = '';
-                    if (is_array($route['handler'])) {
-                        try {
-                            $response = $this->processConditionalByArray($route['handler']);
-                        } catch (\Exception $e) {
-                            error_log($e->getMessage());
-                        }
-                    } elseif (is_string($route['handler']) && function_exists($route['handler'])) {
-                        try {
-                            $response = $this->processConditionalByString($route['handler']);
-                        } catch (\Exception $e) {
-                            error_log($e->getMessage());
-                        }
-                    } elseif ($route['handler'] instanceof \Closure) {
-                        try {
-                            $response = $this->processConditionalByClosure($route['handler']);
-                        } catch (\Exception $e) {
-                            error_log($e->getMessage());
-                        }
-                    } else {
-                        error_log('Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.');
-                    }
-                    echo $response;
-                    return false;
+
+                if (is_string($route['conditional_tag'])) {
+                    $conditional_tag = $route['conditional_tag'];
                 }
+
+                if (is_array($route['conditional_tag'])) {
+                    $conditional_tag = $route['conditional_tag'][0];
+                }
+
+                if (call_user_func($conditional_tag) !== true) {
+                    continue;
+                }
+
+                $response = '';
+
+                if (is_array($route['handler'])) {
+                    try {
+                        $response = $this->processConditionalByArray($route['handler']);
+                    } catch (\Exception $e) {
+                        error_log($e->getMessage());
+                    }
+                } elseif (is_string($route['handler']) && function_exists($route['handler'])) {
+                    try {
+                        $response = $this->processConditionalByString($route['handler']);
+                    } catch (\Exception $e) {
+                        error_log($e->getMessage());
+                    }
+                } elseif ($route['handler'] instanceof \Closure) {
+                    try {
+                        $response = $this->processConditionalByClosure($route['handler']);
+                    } catch (\Exception $e) {
+                        error_log($e->getMessage());
+                    }
+                } else {
+                    error_log('Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.');
+                }
+                echo $response;
+                return false;
             }
             // If no route found, continue with normal WordPress loading
             return $original;
