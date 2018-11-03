@@ -8,21 +8,21 @@ class Template
      * Includes a template file
      *
      *  @param string $file Name of the view to load
-     *  @param array $data Data to be passed to the view
+     *  @param array $data_noconflict Data to be passed to the view
      *  @param string $hook_to_fire Fires this hook upon loading this template
      */
-    public function include(string $file, array $data = [], string $hook_to_fire = '')
+    public function include(string $file, array $data_noconflict = [], string $hook_to_fire = '')
     {
         // Globals from load_template function from wp-includes/template.php
         global $posts, $post, $wp_did_header, $wp_query, $wp_rewrite, $wpdb, $wp_version, $wp, $id, $comment, $user_ID;
 
         // Warn for conflicting vars
-        if (!empty($data)) {
-            $this->warnForGlobalVarConflicts($data, $file);
+        if (!empty($data_noconflict)) {
+            $this->warnForGlobalVarConflicts($data_noconflict, $file);
         }
 
         // Extract without conflict
-        extract($data, EXTR_SKIP);
+        extract($data_noconflict, EXTR_PREFIX_SAME, 'mww');
 
         // Sanitize search
         if (isset($s)) {
