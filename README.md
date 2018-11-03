@@ -57,7 +57,7 @@ class Home extends Page
 }
 ```
 
-Here, we are including the header, the home page content and the footer.
+Here, we are including the header, the home page content and the footer using [template_include](https://codex.wordpress.org/Plugin_API/Filter_Reference/template_include) in the background.
 
 That's all we need to get started!
 
