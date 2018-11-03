@@ -16,9 +16,9 @@ Modern WordPress Website (MWW) is great for experienced PHP developers using Wor
 
 ## Building a Small Project
 
-[![Click to watch on YouTube](https://img.youtube.com/vi/w2uH_Ae-lhc/0.jpg)](https://www.youtube.com/watch?v=w2uH_Ae-lhc)
+[![Click to watch on YouTube](https://img.youtube.com/vi/avEukD0meAg/0.jpg)](https://www.youtube.com/watch?v=avEukD0meAg)
 
-[(Click to watch on YouTube)](https://www.youtube.com/watch?v=w2uH_Ae-lhc)
+[(Click to watch on YouTube)](https://www.youtube.com/watch?v=avEukD0meAg)
 
 ## Installation
 
