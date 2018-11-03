@@ -3,7 +3,8 @@
 ## About Modern WordPress Website
 
 Modern WordPress Website (MWW) is a modern way of building WordPress websites.<br/>
-Simple and powerful, it's a great skeleton to bootstrap a new WordPress project.
+Simple and powerful, it's a great skeleton to bootstrap a new WordPress project.<br>
+MWW is in beta and open to contributors. Help us test and develop it!
 
 - MVC in WordPress.
 - Simple route engine with native WordPress functions.
