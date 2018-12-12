@@ -126,16 +126,18 @@ class RouteConditional
         add_filter('template_include', function ($original) {
             foreach ($this->routes as $route) {
 
+                // example: 'is_front_page'
                 if (is_string($route['conditional_tag'])) {
-                    $conditional_tag = $route['conditional_tag'];
+                    if (call_user_func($route['conditional_tag']) !== true) {
+                        continue;
+                    }
                 }
 
-                if (is_array($route['conditional_tag'])) {
-                    $conditional_tag = $route['conditional_tag'][0];
-                }
-
-                if (call_user_func($conditional_tag) !== true) {
-                    continue;
+                // example: ['is_singular', 'topic']
+                if (is_array($route['conditional_tag']) && count($route['conditional_tag']) === 2) {
+                    if (call_user_func($route['conditional_tag'][0], $route['conditional_tag'][1]) !== true) {
+                        continue;
+                    }
                 }
 
                 $response = '';
