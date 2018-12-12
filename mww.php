@@ -9,9 +9,6 @@
  * License: GPL2
  */
 
-/** This file contains the bare-minimum code to run the Bootstrap class. */
-use App\Bootstrap;
-
 /**
  *  Subfolder in mu-plugins folder that holds the project.
  *  @see https://codex.wordpress.org/Must_Use_Plugins
@@ -27,6 +24,11 @@ if (file_exists(MWW_PATH .'/vendor/autoload.php')) {
     throw new Exception('You need to run "composer update" in the following folder "' . MWW_PATH . '" to get started.');
 }
 
+/** Registers helper functions*/
+require_once(MWW_PATH . '/framework/Support/helpers.php');
+
+/** Registers the classes into the DI container */
+require_once(MWW_PATH . '/app/bindings.php');
+
 /** Run the Application */
-$mww = new Bootstrap();
-$mww->run();
+mww('app.bootstrap')->run();

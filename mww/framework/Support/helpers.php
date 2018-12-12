@@ -1,4 +1,7 @@
 <?php
+
+use MWW\Container\MWW_Container;
+
 /**
  * Debug Function
  *
@@ -65,5 +68,51 @@ if (!function_exists('include_view')) {
 if (!function_exists('endsWith')) {
     function endsWith(string $haystack, string $needle) {
         return substr($haystack,-strlen($needle))===$needle;
+    }
+}
+
+
+/**
+ * Return a instance of a class from the container, or the container itself.
+ *
+ * @param null $slug_or_class
+ * @return mixed|MWW_Container
+ */
+if (!function_exists('mww')) {
+    function mww($slug_or_class = null)
+    {
+        if ($slug_or_class === null) {
+            return MWW_Container::init();
+        } else {
+            return MWW_Container::init()->make($slug_or_class);
+        }
+    }
+}
+
+/**
+ * Registers a class into the DI container as a factory
+ *
+ * @param $slug
+ * @param $class
+ * @param array|null $after_build_methods
+ */
+if (!function_exists('mww_register')) {
+    function mww_register($slug, $class, array $after_build_methods = null)
+    {
+        MWW_Container::init()->bind($slug, $class, $after_build_methods);
+    }
+}
+
+/**
+ * Registers a class into the DI container as singleton
+ *
+ * @param $slug
+ * @param $class
+ * @param array|null $after_build_methods
+ */
+if (!function_exists('mww_singleton')) {
+    function mww_singleton($slug, $class, array $after_build_methods = null)
+    {
+        MWW_Container::init()->singleton($slug, $class, $after_build_methods);
     }
 }

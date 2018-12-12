@@ -11,27 +11,19 @@ class Setup
      * Include App Helpers
      * You can override MWW Helpers here.
      */
-    public static function includeAppHelpers()
+    public function includeAppHelpers()
     {
         include_once(MWW_PATH . '/app/Support/helpers.php');
     }
 
     /**
-     * Include MWW Helpers
-     */
-    public static function includeMWWHelpers()
-    {
-        include_once(__DIR__ . '/helpers.php');
-    }
-
-    /**
      * Enqueues CSS and JS
      */
-    public static function loadAppAssets()
+    public function loadAppAssets()
     {
         add_action('wp_loaded', function() {
-            /** EnqueueScritps instance, don't change it */
-            $assets = new EnqueueScripts;
+            /** EnqueueScritps instance. Don't remove it. Used in included file. */
+            $assets = mww('mww.assets');
             include_once(MWW_PATH . '/app/Support/assets.php');
         });
     }
@@ -39,17 +31,16 @@ class Setup
     /**
      * Registers App Shortcodes
      */
-    public static function registerShortcodes()
+    public function registerShortcodes()
     {
-        $shortcodesRegistrar = new ShortcodesRegistrar;
-        $shortcodesRegistrar->registerAll();
+        mww('mww.shortcodes.registrar')->registerAll();
     }
 
     /**
      * Registers Theme Supports
      * @see https://wordpress.stackexchange.com/a/185578/27278
      */
-    public static function themeSupports(array $theme_supports)
+    public function themeSupports(array $theme_supports)
     {
         add_action('after_setup_theme', function() use ($theme_supports) {
             foreach ($theme_supports as $theme_support) {
@@ -64,7 +55,7 @@ class Setup
      * Removes WordPress emojis
      * https://wordpress.stackexchange.com/a/185578/27278
      */
-    public static function removeEmojis()
+    public function removeEmojis()
     {
           // all actions related to emojis
           remove_action('admin_print_styles', 'print_emoji_styles');
@@ -82,7 +73,7 @@ class Setup
     /**
     *   Enables and registers custom image sizes
     */
-    public static function registerBootstrapImageSizes()
+    public function registerBootstrapImageSizes()
     {
         add_image_size('col-12', 1170, 9999, false);
         add_image_size('col-12-crop', 1170, 9999, true);

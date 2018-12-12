@@ -8,9 +8,9 @@ class RouteConditional
     protected $routes = [];
 
     /**
-    *   Filters and processes the routes
+    *   Filter and dispatches routes using template_include filter
     */
-    public function __destruct()
+    public function dispatch()
     {
         add_action('wp', function() {
             $new_routes = apply_filters('mww_conditional_routes', []);

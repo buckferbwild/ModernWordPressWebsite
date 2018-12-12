@@ -2,8 +2,6 @@
 
 namespace MWW\Pages;
 
-use MWW\Templating\Template;
-
 abstract class Page
 {
     /**
@@ -13,6 +11,6 @@ abstract class Page
 
     public function __construct()
     {
-        $this->template = new Template;
+        $this->template = mww('mww.template');
     }
 }

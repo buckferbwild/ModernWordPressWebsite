@@ -2,29 +2,28 @@
 
 namespace MWW\Routing;
 
-use MWW\Routing\RouteConditional;
-
 class Router
 {
     /**
     *   Route a request in the application
     */
-    public static function routeRequest() {
-        self::loadConditional();
-        self::loadWPRoutes();
+    public function routeRequest() {
+        $this->loadConditional();
+        $this->loadWPRoutes();
+        mww('mww.routing.conditional')->dispatch();
     }
 
     /**
      * Load Conditional Router
      */
-    private static function loadConditional()
+    private function loadConditional()
     {
         $conditional_file = MWW_PATH . '/routes/conditional.php';
         if (file_exists($conditional_file))
         {
             // Conditional Tag Routing (is_front_page, etc)
-            /** @var $router RouteConditional instance - Don't change it*/
-            $router = new RouteConditional;
+            /** @var $router RouteConditional instance - Don't remove it! Used in included file. */
+            $router = mww('mww.routing.conditional');
             include_once($conditional_file);
         }
     }
@@ -32,7 +31,7 @@ class Router
     /**
      * Load WP-Routes Router
      */
-    private static function loadWPRoutes()
+    private function loadWPRoutes()
     {
         $klein_file = MWW_PATH . '/routes/klein.php';
         if (file_exists($klein_file))
