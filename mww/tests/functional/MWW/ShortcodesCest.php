@@ -46,10 +46,8 @@ PHP;
     {
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/test_it_should_render_simple_shortcode', function() {
-            echo do_shortcode('[test_shortcode_124]');
-        });
+    klein_respond('GET', '/test_it_should_render_simple_shortcode', function() {
+        echo do_shortcode('[test_shortcode_124]');
     });
 });
 PHP;
@@ -69,10 +67,8 @@ PHP;
     {
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/test_it_should_render_shortcode_atts', function() {
-            echo do_shortcode('[test_shortcode_124 name="Lucas"]');
-        });
+    klein_respond('GET', '/test_it_should_render_shortcode_atts', function() {
+        echo do_shortcode('[test_shortcode_124 name="Lucas"]');
     });
 });
 PHP;

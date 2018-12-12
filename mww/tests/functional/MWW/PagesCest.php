@@ -25,11 +25,9 @@ PHP;
 
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('/', function() {
-        klein_respond('GET', 'test_it_should_render_page', function() {
-            \$page = new App\Pages\FunctionalTestPage;
-            \$page->index();
-        });
+    klein_respond('GET', '/test_it_should_render_page', function() {
+        \$page = new App\Pages\FunctionalTestPage;
+        \$page->index();
     });
 });
 PHP;
@@ -71,11 +69,9 @@ PHP;
 
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('/', function() {
-        klein_respond('GET', 'it_should_render_page_with_template', function() {
-            \$page = new App\Pages\FunctionalTestPageWithTemplate;
-            \$page->index();
-        });
+    klein_respond('GET', '/it_should_render_page_with_template', function() {
+        \$page = new App\Pages\FunctionalTestPageWithTemplate;
+        \$page->index();
     });
 });
 PHP;
@@ -117,11 +113,9 @@ PHP;
 
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('/', function() {
-        klein_respond('GET', 'it_should_render_page_with_template_with_parameters', function() {
-            \$page = new App\Pages\FunctionalTestPageWithTemplateWithParameters;
-            \$page->index();
-        });
+    klein_respond('GET', '/it_should_render_page_with_template_with_parameters', function() {
+        \$page = new App\Pages\FunctionalTestPageWithTemplateWithParameters;
+        \$page->index();
     });
 });
 PHP;
