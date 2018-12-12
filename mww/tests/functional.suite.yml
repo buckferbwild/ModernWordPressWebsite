@@ -6,7 +6,7 @@
 actor: FunctionalTester
 modules:
     enabled:
-        #- WPDb
+        - WPDb
         - WPBrowser
         - WPFilesystem
         - Asserts
@@ -17,8 +17,8 @@ modules:
             user: '%DB_USER%'
             password: '%DB_PASSWORD%'
             dump: 'tests/_data/dump.sql'
-            populate: true
-            cleanup: true
+            populate: false
+            cleanup: false
             waitlock: 0
             url: '%WP_URL%'
             urlReplacement: true
