@@ -116,3 +116,30 @@ if (!function_exists('mww_singleton')) {
         MWW_Container::init()->singleton($slug, $class, $after_build_methods);
     }
 }
+
+/**
+ * Bulk register classes with mww_singleton
+ *
+ * @param array $singletons
+ */
+if (!function_exists('mww_singletons')) {
+    function mww_singletons(array $singletons)
+    {
+        foreach ($singletons as $slug => $class) {
+            mww_singleton($slug, $class);
+        }
+    }
+}
+/**
+ * Bulk register classes with mww_register
+ *
+ * @param array $registers
+ */
+if (!function_exists('mww_registers')) {
+    function mww_registers(array $registers)
+    {
+        foreach ($registers as $slug => $class) {
+            mww_register($slug, $class);
+        }
+    }
+}
