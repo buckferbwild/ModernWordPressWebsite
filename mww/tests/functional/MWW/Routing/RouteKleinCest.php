@@ -12,14 +12,12 @@ class RouteKleinCest
     {
         $add_filter = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('', function() {
-        klein_respond('GET', '/testing-routing-with-klein', function() {
-            echo 'Klein is fully working!';
-        });
+    klein_respond('GET', '/testing-routing-with-klein', function() {
+        echo 'Klein is fully working!';
     });
 });
 PHP;
-        $I->haveMuPlugin('klein-routes.php', $add_filter);
+        $I->haveMuPlugin('a.php', $add_filter);
 
         $I->amOnPage('/testing-routing-with-klein');
         $I->see('Klein is fully working!');

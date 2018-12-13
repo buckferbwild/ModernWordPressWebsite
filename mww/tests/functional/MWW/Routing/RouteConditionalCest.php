@@ -25,7 +25,7 @@ add_filter('mww_conditional_routes', function(\$routes) {
     return \$routes;
 });
 PHP;
-        $I->haveMuPlugin('my-routes.php', $code);
+        $I->haveMuPlugin('a.php', $code);
         $I->amOnPage('/');
 
         $I->see('Is bar!');
@@ -51,7 +51,7 @@ add_filter('mww_conditional_routes', function(\$routes) {
     return \$routes;
 });
 PHP;
-        $I->haveMuPlugin('my-routes.php', $code);
+        $I->haveMuPlugin('a0.php', $code);
         $I->amOnPage('/');
 
         $I->see('Route tested!');
@@ -76,7 +76,7 @@ add_filter('mww_conditional_routes', function(\$routes) {
     return \$routes;
 });
 PHP;
-        $I->haveMuPlugin('my-routes.php', $code);
+        $I->haveMuPlugin('a.php', $code);
         $I->amOnPage('/');
 
         $I->see('Closure is working!');
