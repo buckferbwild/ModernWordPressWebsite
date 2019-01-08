@@ -1,28 +1,21 @@
 <?php
-/** Dependency Injection Container bindings */
+/** Bindings for dependency injection container */
+use App\Bootstrap;
 
-/**
- * Classes mapped in $singletons will act like singletons.
- * The container creates the object once and returns it every
- * time it's requested throughout the application.
- */
-$singletons = [
-    'app.bootstrap'            => App\Bootstrap::class,
-    'mww.assets'               => MWW\Assets\EnqueueScripts::class,
-    'mww.router'               => MWW\Routing\Router::class,
-    'mww.routing.conditional'  => MWW\Routing\RouteConditional::class,
-    'mww.setup'                => MWW\Support\Setup::class,
-    'mww.shortcodes.registrar' => MWW\Shortcodes\ShortcodesRegistrar::class,
-    'mww.template'             => MWW\Templating\Template::class,
-];
+use MWW\Support\Setup;
+use MWW\Routing\Router;
+use MWW\Templating\Template;
+use MWW\Assets\EnqueueScripts;
+use MWW\Routing\RouteConditional;
+use MWW\Shortcodes\ShortcodesRegistrar;
 
-/**
- * Acts like a factory, returning a new instance every the class
- * is requested throughout the application.
- */
-$registers = [];
+/** App */
+MWW::singleton(Bootstrap::class, Bootstrap::class);
 
-/**
- * If you need to bind classes and use $after_build_method parameter,
- * register them individually bellow
- */
+/** MWW */
+MWW::singleton(Setup::class, Setup::class);
+MWW::singleton(Router::class, Router::class);
+MWW::singleton(Template::class, Template::class);
+MWW::singleton(EnqueueScripts::class, EnqueueScripts::class);
+MWW::singleton(RouteConditional::class, RouteConditional::class);
+MWW::singleton(ShortcodesRegistrar::class, ShortcodesRegistrar::class);

@@ -23,7 +23,7 @@ class Setup
     {
         add_action('wp_loaded', function() {
             /** EnqueueScritps instance. Don't remove it. Used in included file. */
-            $assets = mww('mww.assets');
+            $assets = \MWW::make(EnqueueScripts::class);
             include_once(MWW_PATH . '/app/Support/assets.php');
         });
     }
@@ -33,7 +33,7 @@ class Setup
      */
     public function registerShortcodes()
     {
-        mww('mww.shortcodes.registrar')->registerAll();
+        \MWW::make(ShortcodesRegistrar::class)->registerAll();
     }
 
     /**

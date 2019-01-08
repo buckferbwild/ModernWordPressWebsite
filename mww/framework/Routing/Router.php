@@ -4,13 +4,26 @@ namespace MWW\Routing;
 
 class Router
 {
+    /** @var RouteConditional $routeConditional */
+    protected $routeConditional;
+
+    public function __construct(RouteConditional $routeConditional)
+    {
+        $this->routeConditional = $routeConditional;
+    }
+
     /**
     *   Route a request in the application
     */
     public function routeRequest() {
-        $this->loadConditional();
+        // Filter and Dispatch Klein routes
+
+        require_once(__DIR__ . '/Libraries/wp-routes.php');
         $this->loadWPRoutes();
-        mww('mww.routing.conditional')->dispatch();
+
+        // Filter and Dispatch Conditional routes
+        $this->loadConditional();
+        add_action('wp', [$this->routeConditional, 'dispatch'], 25);
     }
 
     /**
@@ -23,7 +36,7 @@ class Router
         {
             // Conditional Tag Routing (is_front_page, etc)
             /** @var $router RouteConditional instance - Don't remove it! Used in included file. */
-            $router = mww('mww.routing.conditional');
+            $router = $this->routeConditional;
             include_once($conditional_file);
         }
     }
@@ -36,10 +49,8 @@ class Router
         $klein_file = MWW_PATH . '/routes/klein.php';
         if (file_exists($klein_file))
         {
-            // WP-Routes (/something => echo 'something')
-            require_once(__DIR__ . '/Libraries/wp-routes.php');
             add_filter('wp-routes/register_routes', function() use ($klein_file) {
-                klein_with('', $klein_file);
+                include_once($klein_file);
             });
         }
     }

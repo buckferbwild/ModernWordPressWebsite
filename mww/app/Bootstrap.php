@@ -2,8 +2,29 @@
 
 namespace App;
 
+use MWW\Support\Setup;
+use MWW\Routing\Router;
+
 class Bootstrap
 {
+    /** @var Router $router */
+    protected $router;
+
+    /** @var Setup $setup */
+    protected $setup;
+
+    /**
+     * Bootstrap constructor.
+     *
+     * @param Router $router
+     * @param Setup  $setup
+     */
+    public function __construct(Router $router, Setup $setup)
+    {
+        $this->router = $router;
+        $this->setup = $setup;
+    }
+
     /**
      * Bootstraps the website
      * Sets it up and handle the request
@@ -11,7 +32,7 @@ class Bootstrap
     public function run()
     {
         $this->setUp();
-        mww('mww.router')->routeRequest();
+        $this->router->routeRequest();
     }
 
     /**
@@ -19,22 +40,20 @@ class Bootstrap
      */
     private function setUp()
     {
-        $setup = mww('mww.setup');
-
         /** Includes app/Support/helpers.php file */
-        $setup->includeAppHelpers();
+        $this->setup->includeAppHelpers();
 
         /** Enqueues Assets */
-        $setup->loadAppAssets();
+        $this->setup->loadAppAssets();
 
         /** Registers Shortcodes */
-        $setup->registerShortcodes();
+        $this->setup->registerShortcodes();
 
         /** Registers "theme supports" functions */
-        $setup->themeSupports(['post-thumbnails']);
+        $this->setup->themeSupports(['post-thumbnails']);
 
         /** Disable WordPress emojis loading (Optional - Uncomment to use) */
-        //$setup->removeEmojis();
+        $this->setup->removeEmojis();
 
         /** Registers a Main Menu (Optional - Uncomment to use) */
         //register_nav_menu('main-menu', __('Main Menu'));

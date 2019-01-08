@@ -9,14 +9,16 @@
  * License: GPL2
  */
 
-use MWW\Container\MWW_Container;
-
 /**
  *  Subfolder in mu-plugins folder that holds the project.
  *  @see https://codex.wordpress.org/Must_Use_Plugins
  */
+
+use App\Bootstrap;
+
 define('MWW_FOLDER', '/mww');
 define('MWW_PATH', __DIR__ . MWW_FOLDER);
+define('MWW_START', microtime(true));
 define('MWW_URL', plugin_dir_url(__FILE__) . MWW_FOLDER);
 
 /** Registers Composer Autoloader */
@@ -29,8 +31,8 @@ if (file_exists(MWW_PATH .'/vendor/autoload.php')) {
 /** Registers helper functions */
 require_once(MWW_PATH . '/framework/Support/helpers.php');
 
-/** Initializes the Container and registers app/bindings.php */
-MWW_Container::init()->registerBindings();
+/** Initializes the Container and registers bindings */
+MWW::registerBindings(MWW_PATH . '/app/bindings.php');
 
 /** Yahoo! */
-mww('app.bootstrap')->run();
+MWW::make(Bootstrap::class)->run();
