@@ -8,21 +8,24 @@ class RouteConditional
     protected $routes = [];
 
     /**
-    *   Filter and dispatches routes using template_include filter
-    */
-    public function dispatch()
+     * Allows developers to filter routes before dispatching.
+     * Should be hooked at "wp" with priority 9 or less
+     */
+    protected function filterRoutes()
     {
-        add_action('wp', function() {
-            $new_routes = apply_filters('mww_conditional_routes', []);
-            foreach ($new_routes as $new_route) {
-                foreach ($this->routes as $key => &$route) {
-                    if ($route['conditional_tag'] == $new_route['conditional_tag']) {
-                        $this->routes[$key] = $new_route;
-                    }
+        $new_routes = apply_filters('mww_conditional_routes', []);
+
+        foreach ($new_routes as $new_route) {
+            // Overriding existing route
+            foreach ($this->routes as $key => &$route) {
+                if ($route['conditional_tag'] == $new_route['conditional_tag']) {
+                    $this->routes[$key] = $new_route;
+                    continue 2;
                 }
             }
-        });
-        $this->templateInclude();
+            // Adding new route
+            $this->routes[] = $new_route;
+        }
     }
 
     /**
@@ -118,11 +121,11 @@ class RouteConditional
     }
 
     /**
-     * @param string $conditional_tag
-     * @param $handler
+     * Dispatches a conditional route using template_include filter
      */
-    private function templateInclude()
+    public function dispatch()
     {
+        $this->filterRoutes();
         add_filter('template_include', function ($original) {
             foreach ($this->routes as $route) {
 
