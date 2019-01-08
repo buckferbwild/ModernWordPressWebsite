@@ -51,7 +51,7 @@ add_filter('mww_conditional_routes', function(\$routes) {
     return \$routes;
 });
 PHP;
-        $I->haveMuPlugin('a0.php', $code);
+        $I->haveMuPlugin('a.php', $code);
         $I->amOnPage('/');
 
         $I->see('Route tested!');

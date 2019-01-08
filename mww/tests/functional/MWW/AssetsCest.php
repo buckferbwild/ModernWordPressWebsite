@@ -17,11 +17,9 @@ class AssetsCest
         }
         $add_route = <<<PHP
 add_filter('wp-routes/register_routes', function() {
-    klein_with('/', function() {
-        klein_respond('GET', 'test_output_wp_head_wp_footer', function() {
-            wp_head();
-            wp_footer();
-        });
+    klein_respond('GET', '/test_output_wp_head_wp_footer', function() {
+        wp_head();
+        wp_footer();
     });
 });
 PHP;
@@ -69,6 +67,7 @@ PHP;
 
         $I->seeInSource('test_it_should_enqueue_style.css');
         $I->seeInSource('test_it_should_enqueue_js.js');
+        $I->dontSeeInSource('filemtime');
 
         $I->deleteMuPluginFile('mww/public/css/test_it_should_enqueue_style.css');
         $I->deleteMuPluginFile('mww/public/js/test_it_should_enqueue_js.js');
