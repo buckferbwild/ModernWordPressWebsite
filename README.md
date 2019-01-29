@@ -1,4 +1,4 @@
-<p align="center"><img src="https://www.lucasbustamante.com.br/wp-content/uploads/2018/10/mww-logo.svg"></p>
+<p align="center"><img src="http://dev.lucasbustamante.com.br/mww-logo.svg"></p>
 
 ## About Modern WordPress Website
 
