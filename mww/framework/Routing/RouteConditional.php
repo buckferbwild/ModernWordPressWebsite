@@ -189,23 +189,30 @@ class RouteConditional
         if (count($handler) == 2) {
             $class = $handler[0];
             $method = $handler[1];
-            if (class_exists(($class))) {
-                $classInstance = new $class;
-                $reflectionMethod = new \ReflectionMethod($classInstance, $method);
-                // Class exists. Does the method exists?
-                if ($reflectionMethod->isPublic()) {
-                    ob_start();
-                    if ($reflectionMethod->isStatic()) {
-                        $classInstance::$method();
-                    } else {
-                        $classInstance->$method();
-                    }
-                    $response = ob_get_clean();
+
+            // 'App\Pages\Home'
+            if (is_string($class)) {
+                if (class_exists($class)) {
+                    $classInstance = new $class;
                 } else {
-                    throw new \Exception('Could not call method ' . $method . ' on class ' . $class . '. Check if it exists and is public.');
+                    throw new \Exception('Class ' . $class . ' not found.');
                 }
+            } elseif (is_object($class)) {
+                $classInstance = $class;
+            }
+
+            $reflectionMethod = new \ReflectionMethod($classInstance, $method);
+            // Class exists. Does the method exists?
+            if ($reflectionMethod->isPublic()) {
+                ob_start();
+                if ($reflectionMethod->isStatic()) {
+                    $classInstance::$method();
+                } else {
+                    $classInstance->$method();
+                }
+                $response = ob_get_clean();
             } else {
-                throw new \Exception('Class ' . $class . ' not found.');
+                throw new \Exception('Could not call method ' . $method . ' on class ' . $class . '. Check if it exists and is public.');
             }
         } else {
             throw new \Exception('If using an array for add method, it must contain an array with 2 items: Full path to the controller and method. Example: ["\App\Pages\HomeController", "index"]');
