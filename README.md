@@ -11,6 +11,7 @@ Simple and powerful, it's a great skeleton to bootstrap a new WordPress project.
 - PSR-4 Autoloading.
 - Integrated with Acceptance, Functional, Integration and Unit tests (Thanks to Luca Tume, from wp-browser)
 - Installs as a *mu-plugin*
+- MWW is in BETA state.
 
 Modern WordPress Website (MWW) is great for experienced PHP developers using WordPress, and for intermediate developers who want to take their skills to the next level.
 
@@ -92,6 +93,12 @@ You see? This is MVC. We could easily separate the logic - we don't need to use 
 ## Contributing
 
 To contribute to Modern WordPress Website, you can open an issue with your suggestion and if approved, do a pull-request. Please follow PSR-2 code-styling standards and remind about the unopiniated and simple philosophy of Modern WordPress Theme.
+
+## To-dos
+
+- Throw custom Exceptions throughout the framework and app
+- Refactor RouteConditional
+- Write unit tests
 
 ## License
 
