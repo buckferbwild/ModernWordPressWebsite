@@ -98,6 +98,7 @@ To contribute to Modern WordPress Website, you can open an issue with your sugge
 
 - Throw custom Exceptions throughout the framework and app
 - Refactor RouteConditional
+- Remove Assets helper class
 - Write unit tests
 
 ## License
