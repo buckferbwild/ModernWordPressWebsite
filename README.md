@@ -11,7 +11,8 @@ First, you route WordPress conditional tags such as *is_front_page()* to Control
 - MVC in WordPress.
 - Modern, yet simple PHP.
 - PSR-4 Autoloading.
-- Integrated with Acceptance, Functional, Integration and Unit tests (Thanks to Luca Tume, from wp-browser)
+- Dependency Injection Container (Thanks Luca Tume, for [di52](https://github.com/lucatume/di52))
+- Acceptance, Functional, Integration and Unit tests (Thanks Luca Tume, for [wp-browser](https://github.com/lucatume/wp-browser))
 - Installs as a *mu-plugin*
 - MWW is in BETA state.
 
