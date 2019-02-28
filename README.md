@@ -48,7 +48,7 @@ Even though MWW is powerful, it's also very simple. It all starts with the route
 $router->add('is_front_page', ['App\Pages\Home', 'index']);
 ```
 
-If is_front_page() is true, then call method index on App\Pages\Home:
+If `is_front_page()`, call `index()` on `App\Pages\Home`:
 
 ```php
 // app/pages/Home.php
@@ -63,7 +63,7 @@ class Home extends Page
 }
 ```
 
-Here, we are including the header, the home page content and the footer using [template_include](https://codex.wordpress.org/Plugin_API/Filter_Reference/template_include) in the background.
+In this example we are including the header, the home page content and the footer views, using [template_include](https://codex.wordpress.org/Plugin_API/Filter_Reference/template_include) in the background.
 
 That's all we need to get started!
 
@@ -91,7 +91,7 @@ foreach ($posts as $post) {
 }
 ```
 
-You see? This is MVC. We could easily separate the logic - we don't need to use get_posts() in our view, we can do it in the Controller (or create a model for it) and pass it digested to the view. This way, it is easier for our application to grow organized.
+You see? This is MVC. We could easily separate the logic - we don't need to use `get_posts()` in our view, we can do it in the Controller, or better yet, ask a Model to fetch and prepare that data, and then we pass it to the view. This way, it is easier for our application to grow organized.
 
 ## Contributing
 
