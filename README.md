@@ -48,7 +48,7 @@ Even though MWW is powerful, it's also very simple. It all starts with the route
 $router->add('is_front_page', ['App\Pages\Home', 'index']);
 ```
 
-If `is_front_page()`, call `index()` on `App\Pages\Home`:
+If `is_front_page()` is true, then call the method `index()` of `App\Pages\Home`:
 
 ```php
 // app/pages/Home.php
