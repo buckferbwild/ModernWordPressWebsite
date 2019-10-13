@@ -1,6 +1,6 @@
 <?php
 
-namespace MWW\Templating;
+namespace MWW\Templates;
 
 use Illuminate\View\Factory;
 use Illuminate\Events\Dispatcher;

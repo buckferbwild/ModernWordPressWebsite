@@ -9,11 +9,6 @@
  * License: GPL2
  */
 
-/**
- *  Subfolder in mu-plugins folder that holds the project.
- * @see https://codex.wordpress.org/Must_Use_Plugins
- */
-
 use App\Bootstrap;
 use MWW\DI\Container;
 
@@ -32,7 +27,8 @@ if ( file_exists( MWW_PATH . '/vendor/autoload.php' ) ) {
 /** Registers helper functions */
 require_once( MWW_PATH . '/framework/Support/helpers.php' );
 
-/** Initializes the Container and registers bindings */
+/** Builds the Dependency Injection Container and registers Service Providers */
+Container::registerBindings( MWW_PATH . '/framework/bindings.php' );
 Container::registerBindings( MWW_PATH . '/app/bindings.php' );
 
 /** Yahoo! */
