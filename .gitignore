@@ -5,3 +5,5 @@
 
 mww/tests/_output
 mww/tests/_support/_generated
+
+mww/views/compiled/
