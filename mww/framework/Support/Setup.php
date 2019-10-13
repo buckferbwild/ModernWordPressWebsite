@@ -3,6 +3,7 @@
 namespace MWW\Support;
 
 use MWW\Assets\EnqueueScripts;
+use MWW\DI\Container;
 use MWW\Shortcodes\ShortcodesRegistrar;
 
 class Setup
@@ -23,7 +24,7 @@ class Setup
     {
         add_action('wp_loaded', function() {
             /** EnqueueScritps instance. Don't remove it. Used in included file. */
-            $assets = \MWW::make(EnqueueScripts::class);
+            $assets = Container::make(EnqueueScripts::class);
             include_once(MWW_PATH . '/app/Support/assets.php');
         });
     }
@@ -33,7 +34,7 @@ class Setup
      */
     public function registerShortcodes()
     {
-        \MWW::make(ShortcodesRegistrar::class)->registerAll();
+        Container::make(ShortcodesRegistrar::class)->registerAll();
     }
 
     /**

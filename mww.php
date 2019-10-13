@@ -15,6 +15,7 @@
  */
 
 use App\Bootstrap;
+use MWW\DI\Container;
 
 define('MWW_FOLDER', '/mww');
 define('MWW_PATH', __DIR__ . MWW_FOLDER);
@@ -32,7 +33,7 @@ if (file_exists(MWW_PATH .'/vendor/autoload.php')) {
 require_once(MWW_PATH . '/framework/Support/helpers.php');
 
 /** Initializes the Container and registers bindings */
-MWW::registerBindings(MWW_PATH . '/app/bindings.php');
+Container::registerBindings(MWW_PATH . '/app/bindings.php');
 
 /** Yahoo! */
-MWW::make(Bootstrap::class)->run();
+Container::make(Bootstrap::class)->run();

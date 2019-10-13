@@ -2,6 +2,7 @@
 /** Bindings for dependency injection container */
 use App\Bootstrap;
 
+use MWW\DI\Container;
 use MWW\Support\Setup;
 use MWW\Routing\Router;
 use MWW\Templating\Template;
@@ -10,12 +11,12 @@ use MWW\Routing\RouteConditional;
 use MWW\Shortcodes\ShortcodesRegistrar;
 
 /** App */
-MWW::singleton(Bootstrap::class, Bootstrap::class);
+Container::singleton(Bootstrap::class, Bootstrap::class);
 
 /** MWW */
-MWW::singleton(Setup::class, Setup::class);
-MWW::singleton(Router::class, Router::class);
-MWW::singleton(Template::class, Template::class);
-MWW::singleton(EnqueueScripts::class, EnqueueScripts::class);
-MWW::singleton(RouteConditional::class, RouteConditional::class);
-MWW::singleton(ShortcodesRegistrar::class, ShortcodesRegistrar::class);
+Container::singleton(Setup::class, Setup::class);
+Container::singleton(Router::class, Router::class);
+Container::singleton(Template::class, Template::class);
+Container::singleton(EnqueueScripts::class, EnqueueScripts::class);
+Container::singleton(RouteConditional::class, RouteConditional::class);
+Container::singleton(ShortcodesRegistrar::class, ShortcodesRegistrar::class);

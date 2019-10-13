@@ -3,10 +3,7 @@
         "psr-4": {
             "App\\": "app",
             "MWW\\": "framework"
-        },
-        "files": [
-            "framework/Container/MWW.php"
-        ]
+        }
     },
     "require-dev": {
         "lucatume/wp-browser": "2.*",
