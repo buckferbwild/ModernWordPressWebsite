@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Pages;
-
-use MWW\Pages\Page;
+namespace App\Templates\Pages;
 
 class Home extends Page {
 	public function index() {

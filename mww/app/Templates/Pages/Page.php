@@ -1,9 +1,9 @@
 <?php
 
-namespace MWW\Pages;
+namespace App\Templates\Pages;
 
 use MWW\DI\Container;
-use MWW\Templating\Template;
+use MWW\Templates\Template;
 
 abstract class Page {
 	public function __construct() {

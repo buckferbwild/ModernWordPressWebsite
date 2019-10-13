@@ -27,5 +27,5 @@
  * In case there are multiple conditional tags of the same kind, ex: two is_front_page,
  * the last one will be processed, while the first ones are ignored.
  */
-$router->add( 'is_front_page', [ 'App\Pages\Home', 'index' ] );
-$router->add( 'is_404', [ 'App\Pages\NotFound', 'index' ] );
+$router->add( 'is_front_page', [ 'App\Templates\Pages\Home', 'index' ] );
+$router->add( 'is_404', [ 'App\Templates\Pages\NotFound', 'index' ] );
