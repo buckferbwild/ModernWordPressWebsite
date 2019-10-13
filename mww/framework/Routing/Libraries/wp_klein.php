@@ -6,19 +6,19 @@
  * https://github.com/lucatume/klein52
  */
 
-$__klein_routes    = array();
+$__klein_routes    = [];
 $__klein_namespace = null;
 
 /**
  * Registers a route as one handled by klein.
  *
- * @since 1.0.3
- *
- * @param        string $method   A supported HTTP method, e.g. `GET`, `POST`, `DELETE` and so on.
- * @param string        $route    The route matching pattern.
- * @param  callable     $callback The callback that should be used to handle the request.
+ * @param string $method A supported HTTP method, e.g. `GET`, `POST`, `DELETE` and so on.
+ * @param string $route The route matching pattern.
+ * @param callable $callback The callback that should be used to handle the request.
  *
  * @return mixed|null
+ * @since 1.0.3
+ *
  */
 function klein_respond( $method, $route = '*', $callback = null ) {
 	global $__klein_routes, $__klein_namespace;
@@ -63,7 +63,7 @@ function klein_respond( $method, $route = '*', $callback = null ) {
 		$route = $__klein_namespace . $route;
 	}
 
-	$__klein_routes[] = array( $method, $route, $callback, $count_match );
+	$__klein_routes[] = [ $method, $route, $callback, $count_match ];
 
 	return $callback;
 }
@@ -71,11 +71,12 @@ function klein_respond( $method, $route = '*', $callback = null ) {
 /**
  * Registers a group of routes with a common root namespace.
  *
- * @since 1.0.3
- *
  * @param string $namespace The namespace that for a group of routes, e.g. `/users` or `/api/admin`
  * @param string|callable $routes Either the path to a file defining a group of routes or a callable
  *                                registering a group of routes.
+ *
+ * @since 1.0.3
+ *
  */
 function klein_with( $namespace, $routes ) {
 	global $__klein_namespace;
@@ -103,17 +104,17 @@ function klein_start_session() {
 /**
  * Dispatches a request to the appropriate route.
  *
- * @since 1.0.3
- *
- * @param null|string       $uri The request URI
- * @param null|string       $req_method The request method, e.g. `GET`, `POST` or `DELETE`
+ * @param null|string $uri The request URI
+ * @param null|string $req_method The request method, e.g. `GET`, `POST` or `DELETE`
  * @param array|null $params An array of parameters for the request
- * @param bool       $capture Whether the matching route response output should be printed or not
- * @param bool       $passthru If `capture` is set to `true` when no route is matched the function will
+ * @param bool $capture Whether the matching route response output should be printed or not
+ * @param bool $passthru If `capture` is set to `true` when no route is matched the function will
  *                             return `false`
  *
  * @return bool|string `false` if the route was not matched and `capture` and `passthru` were `true`; the matched
  *                     route output otherwise.
+ * @since 1.0.3
+ *
  */
 function klein_dispatch( $uri = null, $req_method = null, array $params = null, $capture = false, $passthru = false ) {
 	global $__klein_routes;
@@ -150,7 +151,7 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
 	}
 
 	$matched         = 0;
-	$methods_matched = array();
+	$methods_matched = [];
 
 	ob_start();
 
@@ -194,8 +195,7 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
 		} elseif ( $_route === '404' && ! $matched && count( $methods_matched ) <= 0 ) {
 			try {
 				call_user_func( $callback, $request, $response, $app, $matched, $methods_matched );
-			}
-			catch ( Exception $e ) {
+			} catch ( Exception $e ) {
 				$response->error( $e );
 			}
 
@@ -206,8 +206,7 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
 		} elseif ( $_route === '405' && ! $matched && count( $methods_matched ) > 0 ) {
 			try {
 				call_user_func( $callback, $request, $response, $app, $matched, $methods_matched );
-			}
-			catch ( Exception $e ) {
+			} catch ( Exception $e ) {
 				$response->error( $e );
 			}
 
@@ -249,7 +248,7 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
 			$regex = wp_cache_get( "route:$route", 'klein' );
 			if ( false === $regex ) {
 				$regex = klein_compile_route( $route );
-				wp_cache_set( "route:$route", $regex,'klein' );
+				wp_cache_set( "route:$route", $regex, 'klein' );
 			}
 
 			$match = preg_match( $regex, $uri, $params );
@@ -267,8 +266,7 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
 				}
 				try {
 					call_user_func( $callback, $request, $response, $app, $matched, $methods_matched );
-				}
-				catch ( Exception $e ) {
+				} catch ( Exception $e ) {
 					$response->error( $e );
 				}
 				if ( $_route !== '*' ) {
@@ -303,15 +301,15 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
 /**
  * Dispatches the request to the first available matching routes and dies, or continues the script execution.
  *
- * @since 1.0.3
- *
- * @param null|string       $uri The request URI
- * @param null|string       $req_method The request method, e.g. `GET`, `POST` or `DELETE`
+ * @param null|string $uri The request URI
+ * @param null|string $req_method The request method, e.g. `GET`, `POST` or `DELETE`
  * @param array|null $params An array of parameters for the request
  *
  * @return string|void|mixed|bool The route output if one was matched and the `dieCallback` is set to `true`;
  *                     otherwise the route output will be output before `die`ing; `false` if no matching route
  *                                was found.
+ * @since 1.0.3
+ *
  */
 function klein_dispatch_or_continue( $uri = null, $req_method = null, array $params = null ) {
 	$found = klein_dispatch( $uri, $req_method, $params, true, true );
@@ -351,22 +349,22 @@ function klein_dispatch_or_continue( $uri = null, $req_method = null, array $par
 /**
  * Compiles a route from the format used by klein to a regular expression.
  *
- * @since 1.0.3
- *
  * @param string $route The route in the format supported by klein.
  *
  * @return string The regular expression corresponding to the input route.
+ * @since 1.0.3
+ *
  */
 function klein_compile_route( $route ) {
 	if ( preg_match_all( '`(/|\.|)\[([^:\]]*+)(?::([^:\]]*+))?\](\?|)`', $route, $matches, PREG_SET_ORDER ) ) {
-		$match_types = array(
+		$match_types = [
 			'i'  => '[0-9]++',
 			'a'  => '[0-9A-Za-z]++',
 			'h'  => '[0-9A-Fa-f]++',
 			'*'  => '.+?',
 			'**' => '.++',
 			''   => '[^/]+?',
-		);
+		];
 		foreach ( $matches as $match ) {
 			list( $block, $pre, $type, $param, $optional ) = $match;
 
@@ -534,14 +532,22 @@ class klein_Response extends StdClass {
 
 	public static $_headers = null;
 	public $chunked = false;
-	protected $_errorCallbacks = array();
+	protected $_errorCallbacks = [];
 	protected $_layout = null;
 	protected $_view = null;
 	protected $_code = 200;
 
 	// Enable response chunking. See: http://bit.ly/hg3gHb
 
-	public function cookie( $key, $value = '', $expiry = null, $path = '/', $domain = null, $secure = false, $httponly = false ) {
+	public function cookie(
+		$key,
+		$value = '',
+		$expiry = null,
+		$path = '/',
+		$domain = null,
+		$secure = false,
+		$httponly = false
+	) {
 		if ( null === $expiry ) {
 			$expiry = time() + ( 3600 * 24 * 30 );
 		}
@@ -656,7 +662,7 @@ class klein_Response extends StdClass {
 	// Redirects the request to the current URL
 
 	public function query( $key, $value = null ) {
-		$query = array();
+		$query = [];
 		if ( isset( $_SERVER['QUERY_STRING'] ) ) {
 			parse_str( $_SERVER['QUERY_STRING'], $query );
 		}
@@ -682,7 +688,7 @@ class klein_Response extends StdClass {
 
 	// Sets response properties/helpers
 
-	public function partial( $view, array $data = array() ) {
+	public function partial( $view, array $data = [] ) {
 		$layout        = $this->_layout;
 		$this->_layout = null;
 		$this->render( $view, $data );
@@ -691,7 +697,7 @@ class klein_Response extends StdClass {
 
 	// Adds to or modifies the current query string
 
-	public function render( $view, array $data = array() ) {
+	public function render( $view, array $data = [] ) {
 		$original_view = $this->_view;
 
 		if ( ! empty( $data ) ) {
@@ -794,9 +800,9 @@ class klein_Response extends StdClass {
 			$type   = 'info';
 		}
 		if ( ! isset( $_SESSION['__flashes'] ) ) {
-			$_SESSION['__flashes'] = array( $type => array() );
+			$_SESSION['__flashes'] = [ $type => [] ];
 		} elseif ( ! isset( $_SESSION['__flashes'][ $type ] ) ) {
-			$_SESSION['__flashes'][ $type ] = array();
+			$_SESSION['__flashes'][ $type ] = [];
 		}
 		$_SESSION['__flashes'][ $type ][] = $this->markdown( $msg, $params );
 	}
@@ -805,11 +811,11 @@ class klein_Response extends StdClass {
 
 	public function markdown( $str, $args = null ) {
 		$args = func_get_args();
-		$md   = array(
+		$md   = [
 			'/\[([^\]]++)\]\(([^\)]++)\)/' => '<a href="$2">$1</a>',
 			'/\*\*([^\*]++)\*\*/'          => '<strong>$1</strong>',
 			'/\*([^\*]++)\*/'              => '<em>$1</em>',
-		);
+		];
 		$str  = array_shift( $args );
 		if ( is_array( $args[0] ) ) {
 			$args = $args[0];
@@ -832,13 +838,13 @@ class klein_Response extends StdClass {
 	public function flashes( $type = null ) {
 		klein_start_session();
 		if ( ! isset( $_SESSION['__flashes'] ) ) {
-			return array();
+			return [];
 		}
 		if ( null === $type ) {
 			$flashes = $_SESSION['__flashes'];
 			unset( $_SESSION['__flashes'] );
 		} elseif ( null !== $type ) {
-			$flashes = array();
+			$flashes = [];
 			if ( isset( $_SESSION['__flashes'][ $type ] ) ) {
 				$flashes = $_SESSION['__flashes'][ $type ];
 				unset( $_SESSION['__flashes'][ $type ] );
@@ -900,10 +906,11 @@ class klein_Response extends StdClass {
  * Validators registered with this method will be available using the `is<method>` and `not<method>` chained
  * on the `$request->validate(<key>)` method; see the README.md file.
  *
- * @since 1.0.3
- *
  * @param string $method The validation pattern slug; e.g. `hex` or `userId`
  * @param callable $callback The function that will be called to validate the pattern; should return a boolean value
+ *
+ * @since 1.0.3
+ *
  */
 function klein_addValidator( $method, $callback ) {
 	klein_Validator::$_methods[ strtolower( $method ) ] = $callback;
@@ -916,7 +923,8 @@ function klein_addValidator( $method, $callback ) {
  *
  * @since 1.0.3
  */
-class klein_ValidatorException extends Exception {}
+class klein_ValidatorException extends Exception {
+}
 
 /**
  * Class klein_Validator
@@ -925,7 +933,7 @@ class klein_ValidatorException extends Exception {}
  */
 class klein_Validator {
 
-	public static $_methods = array();
+	public static $_methods = [];
 
 	protected $_str = null;
 	protected $_err = null;
@@ -941,18 +949,18 @@ class klein_Validator {
 
 	// Adds default validators on first use. See README for usage details
 	public static function addDefault() {
-		self::$_methods['null']     = array( self, 'validateNull' );
-		self::$_methods['len']      = array( self, 'validateLen' );
-		self::$_methods['int']      = array( self, 'validateInt' );
-		self::$_methods['float']    = array( self, 'validateFloat' );
-		self::$_methods['email']    = array( self, 'validateEmail' );
-		self::$_methods['url']      = array( self, 'validateUrl' );
-		self::$_methods['ip']       = array( self, 'validateIp' );
-		self::$_methods['alnum']    = array( self, 'validateAlnum' );
-		self::$_methods['alpha']    = array( self, 'validateAlpha' );
-		self::$_methods['contains'] = array( self, 'validateContains' );
-		self::$_methods['regex']    = array( self, 'validateRegex' );
-		self::$_methods['chars']    = array( self, 'validateChars' );
+		self::$_methods['null']     = [ self, 'validateNull' ];
+		self::$_methods['len']      = [ self, 'validateLen' ];
+		self::$_methods['int']      = [ self, 'validateInt' ];
+		self::$_methods['float']    = [ self, 'validateFloat' ];
+		self::$_methods['email']    = [ self, 'validateEmail' ];
+		self::$_methods['url']      = [ self, 'validateUrl' ];
+		self::$_methods['ip']       = [ self, 'validateIp' ];
+		self::$_methods['alnum']    = [ self, 'validateAlnum' ];
+		self::$_methods['alpha']    = [ self, 'validateAlpha' ];
+		self::$_methods['contains'] = [ self, 'validateContains' ];
+		self::$_methods['regex']    = [ self, 'validateRegex' ];
+		self::$_methods['chars']    = [ self, 'validateChars' ];
 	}
 
 	/**
@@ -1096,8 +1104,8 @@ class klein_Validator {
  */
 class klein_App {
 
-	protected $services = array();
-	protected $serviceInstances = array();
+	protected $services = [];
+	protected $serviceInstances = [];
 
 	// Check for a lazy service
 	public function __get( $name ) {
