@@ -32,13 +32,21 @@ class Template
         // Allows for subdirectory includes, such as "partials.header"
         $file = str_replace('.', '/', $file);
 
-        $file_path = MWW_PATH . '/views/' .$file.'.php';
+        $file_path = MWW_PATH . '/views/' . $file . '.blade.php';
 
         if (file_exists($file_path)) {
             if (!empty($hook)) {
                 do_action($hook);
             }
-            require($file_path);
+
+            // Create \Illuminate\View\Factory
+            $view = ViewFactory::create();
+
+            // Pass all previously defined to view 
+            $view->share(get_defined_vars());
+
+            // Construct and render view
+            echo $view->make($file)->render();
         } else {
             $message = 'Error loading view: '.$file;
             error_log($message);
