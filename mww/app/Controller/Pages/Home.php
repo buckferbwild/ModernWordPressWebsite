@@ -4,10 +4,10 @@ namespace App\Controller\Pages;
 
 use MWW\Controller\Controller;
 
-class NotFound_Controller extends Controller {
+class Home extends Controller {
 
 	public function index() {
-		$this->render( 'pages.404' );
+		$this->render( 'pages.home' );
 	}
 
 }
