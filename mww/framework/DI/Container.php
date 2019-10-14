@@ -60,6 +60,13 @@ class Container {
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public static function isBound( $classOrInterface ) {
+		return static::container()->isBound( $classOrInterface );
+	}
+
+	/**
 	 * Proxy method to redirect any call made on a method not explicitly implemented by this
 	 * class to the container.
 	 *
