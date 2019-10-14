@@ -6,8 +6,9 @@
 
     <hr>
 
-    @loop
-    <h3>{{ get_the_title() }}</h3>
-    {!! get_the_content() !!}
-    @endloop
+    @forelse ($home_posts as $post)
+        {!! $post !!}
+    @empty
+        <p>{{ __('No posts to show at the moment.') }}</p>
+    @endforelse
 @endsection

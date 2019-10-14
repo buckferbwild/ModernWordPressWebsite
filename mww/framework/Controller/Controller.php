@@ -14,10 +14,14 @@ abstract class Controller {
 		$this->template = Container::make( Template::class );
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	protected function include( string $file, array $data_noconflict = [], string $hook_to_fire = '' ) {
 		$this->template->include( $file, $data_noconflict, $hook_to_fire );
+	}
+
+	protected function generate( string $file, array $data_noconflict = [], string $hook_to_fire = '' ): string {
+		ob_start();
+		$this->template->include( $file, $data_noconflict, $hook_to_fire );
+
+		return ob_get_clean();
 	}
 }
