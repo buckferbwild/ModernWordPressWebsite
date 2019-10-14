@@ -17,7 +17,7 @@ abstract class Controller {
 	/**
 	 * @inheritDoc
 	 */
-	protected function render( string $file, array $data_noconflict = [], string $hook_to_fire = '' ) {
+	protected function include( string $file, array $data_noconflict = [], string $hook_to_fire = '' ) {
 		$this->template->include( $file, $data_noconflict, $hook_to_fire );
 	}
 }

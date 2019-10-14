@@ -7,7 +7,7 @@ use MWW\Controller\Controller;
 class Home extends Controller {
 
 	public function index() {
-		$this->render( 'pages.home' );
+		$this->include( 'pages.home' );
 	}
 
 }
