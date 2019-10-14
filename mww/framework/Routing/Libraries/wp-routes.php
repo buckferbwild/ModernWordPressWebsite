@@ -6,6 +6,9 @@
 
 require_once dirname( __FILE__ ) . '/wp_klein.php';
 
+use MWW\DI\Container;
+use MWW\Routing\Router;
+
 if ( ! function_exists( 'wp_routes_do_parse_request' ) ) {
 	/**
 	 * Filters the request parsing process before WordPress does.
@@ -35,7 +38,22 @@ if ( ! function_exists( 'wp_routes_do_parse_request' ) ) {
 		 * then continue and let WordPress handle the request; otherwise output the
 		 * route output and `die`.
 		 */
-		klein_dispatch_or_continue();
+		add_filter( 'template_include', function ( $original ) {
+			// Only hit route once
+			if ( Container::make( Router::class )->getHitRoute() ) {
+				return $original;
+			}
+
+			$output = klein_dispatch_or_continue();
+
+			if ( ! empty( $output ) ) {
+				echo $output;
+
+				return false;
+			}
+
+			return $original;
+		}, 50 );
 
 		// if we got here WordPress should handle the request
 		return $continue;

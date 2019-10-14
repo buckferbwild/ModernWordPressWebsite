@@ -6,6 +6,9 @@
  * https://github.com/lucatume/klein52
  */
 
+use MWW\DI\Container;
+use MWW\Routing\RouteConditional;
+
 $__klein_routes    = [];
 $__klein_namespace = null;
 
@@ -21,6 +24,7 @@ $__klein_namespace = null;
  *
  */
 function klein_respond( $method, $route = '*', $callback = null ) {
+
 	global $__klein_routes, $__klein_namespace;
 
 	$args     = func_get_args();
@@ -63,7 +67,13 @@ function klein_respond( $method, $route = '*', $callback = null ) {
 		$route = $__klein_namespace . $route;
 	}
 
-	$__klein_routes[] = [ $method, $route, $callback, $count_match ];
+	$new_routes   = [];
+	$new_routes[] = [ $method, $route, $callback, $count_match ];
+	$new_routes   = apply_filters( 'mww/route/raw/respond', $new_routes );
+
+	foreach ( $new_routes as $new_route ) {
+		$__klein_routes[] = $new_route;
+	}
 
 	return $callback;
 }
@@ -265,7 +275,11 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
 					$_REQUEST = array_merge( $_REQUEST, $params );
 				}
 				try {
-					call_user_func( $callback, $request, $response, $app, $matched, $methods_matched );
+					if ( is_array( $callback ) && count( $callback ) === 2 ) {
+						echo Container::make( RouteConditional::class )->processConditionalByArray( $callback );
+					} else {
+						call_user_func( $callback, $request, $response, $app, $matched, $methods_matched );
+					}
 				} catch ( Exception $e ) {
 					$response->error( $e );
 				}
@@ -312,7 +326,7 @@ function klein_dispatch( $uri = null, $req_method = null, array $params = null, 
  *
  */
 function klein_dispatch_or_continue( $uri = null, $req_method = null, array $params = null ) {
-	$found = klein_dispatch( $uri, $req_method, $params, true, true );
+	$found = klein_dispatch( $uri, $req_method, $params, true, false );
 	if ( $found ) {
 		$dieCallback = null;
 

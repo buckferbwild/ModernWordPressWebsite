@@ -1,10 +1,9 @@
 <?php
 /** Bindings for dependency injection container */
 
-use App\Bootstrap;
-
 use MWW\DI\Container;
+use MWW\Routing\Condition;
 use MWW\Templates\Template;
-use App\Templates\Pages\Page;
 
 Container::singleton( Template::class, Template::class );
+Container::bind( Condition::class, Condition::class );

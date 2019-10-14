@@ -2,6 +2,8 @@
 
 namespace MWW\Routing;
 
+use MWW\DI\Container;
+
 class RouteConditional {
 	/** @var array holds routes to be processed */
 	protected $routes = [];
@@ -51,44 +53,32 @@ class RouteConditional {
 	 *
 	 * @see https://codex.wordpress.org/Plugin_API/Filter_Reference/template_include
 	 */
-	public function add( string $conditional_tag, $handler ) {
-		$conditional_tag = $this->normalizeConditionalTag( $conditional_tag );
+	public function add( $conditional_tag, $handler ) {
+
+		// Is it a Route with multiple conditions?
+		if ( $conditional_tag instanceof Condition ) {
+			// Yes. Let's assign each condition to this Handler.
+			foreach ( $conditional_tag->getConditions() as $single_condition ) {
+				$this->add( $single_condition, $handler );
+			}
+
+			// The Condition object has fulfilled it's role.
+			return;
+		}
+
 		if ( $this->assertConditionalIsCallable( $conditional_tag ) ) {
 			$this->enqueueRoute( $conditional_tag, $handler );
 		} else {
+			if ( is_array( $conditional_tag ) ) {
+				$conditional_tag = array_shift( $conditional_tag );
+			}
 			$message = 'The conditional tag "' . $conditional_tag . '" used for routing does not exist.';
 			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				echo $message;
 			}
-			error_log( 'The conditional tag "' . $conditional_tag . '" used for routing does not exist.' );
 
 			return;
 		}
-	}
-
-	/**
-	 *   Transforms is_page("Something") into ['is_page', 'something']
-	 *   or just return if it's a string already
-	 *
-	 * @param string $conditional_tag
-	 *
-	 * @return mixed $conditional_tag
-	 */
-	private function normalizeConditionalTag( string $conditional_tag ) {
-		if ( strpos( $conditional_tag, '(' ) ) {
-			// Normalize quotes
-			str_replace( '\'', '"', $conditional_tag );
-			// Get function name
-			$function_name = explode( '(', $conditional_tag );
-			$function_name = array_shift( $function_name );
-			// Get parameters
-			if ( preg_match( '/"([^"]+)"/', $conditional_tag, $result ) ) {
-				$parameter = $result[1];
-			}
-			$conditional_tag = [ $function_name, $parameter ];
-		}
-
-		return $conditional_tag;
 	}
 
 	/**
@@ -99,11 +89,14 @@ class RouteConditional {
 	 * @return bool
 	 */
 	private function assertConditionalIsCallable( $conditional_tag ) {
+		if ( is_string( $conditional_tag ) ) {
+			return function_exists( $conditional_tag );
+		}
 		if ( is_array( $conditional_tag ) ) {
-			$conditional_tag = $conditional_tag[0];
+			return function_exists( $conditional_tag[0] );
 		}
 
-		return function_exists( $conditional_tag );
+		return false;
 	}
 
 	/**
@@ -125,8 +118,14 @@ class RouteConditional {
 	 * Dispatches a conditional route using template_include filter
 	 */
 	public function dispatch() {
+		$this->sortRoutes();
 		$this->filterRoutes();
 		add_filter( 'template_include', function ( $original ) {
+			// Only hit route once
+			if ( Container::make( Router::class )->getHitRoute() ) {
+				return $original;
+			}
+
 			foreach ( $this->routes as $route ) {
 
 				// example: 'is_front_page'
@@ -141,6 +140,11 @@ class RouteConditional {
 					if ( call_user_func( $route['conditional_tag'][0], $route['conditional_tag'][1] ) !== true ) {
 						continue;
 					}
+				}
+
+				/** Sets the default action if given the string of a Class */
+				if ( is_string( $route['handler'] ) && class_exists( $route['handler'] ) ) {
+					$route['handler'] = [ $route['handler'], 'index' ];
 				}
 
 				$response = '';
@@ -166,6 +170,9 @@ class RouteConditional {
 				} else {
 					error_log( 'Routes should be either an array containing ["Class", "Metod"], a string containing a function name, or an anonymous function closure.' );
 				}
+
+				Container::make( Router::class )->setHitRoute( true );
+
 				echo $response;
 
 				return false;
@@ -174,6 +181,28 @@ class RouteConditional {
 			// If no route found, continue with normal WordPress loading
 			return $original;
 		} );
+	}
+
+	/**
+	 * Prioritize Routes where the conditional tags are arrays,
+	 * which means they are more specific than strings.
+	 *
+	 * This avoid that a "is_page" route wrongly matches before
+	 * a ["is_page", "foo"] when viewing the "Foo" page.
+	 */
+	private function sortRoutes() {
+		$specific_routes = [];
+		$generic_routes  = [];
+
+		array_map( function ( $route ) use ( &$specific_routes, &$generic_routes ) {
+			if ( is_array( $route['conditional_tag'] ) ) {
+				array_push( $specific_routes, $route );
+			} else {
+				array_push( $generic_routes, $route );
+			}
+		}, $this->routes );
+
+		$this->routes = array_merge( $specific_routes, $generic_routes );
 	}
 
 	/**
@@ -187,18 +216,14 @@ class RouteConditional {
 	 * @return string
 	 * @throws \Exception
 	 */
-	private function processConditionalByArray( array $handler ) {
+	public function processConditionalByArray( array $handler ) {
 		if ( count( $handler ) == 2 ) {
 			$class  = $handler[0];
 			$method = $handler[1];
 
 			// 'App\Pages\Home'
 			if ( is_string( $class ) ) {
-				if ( class_exists( $class ) ) {
-					$classInstance = new $class;
-				} else {
-					throw new \Exception( 'Class ' . $class . ' not found.' );
-				}
+				$classInstance = $this->getClassByString( $class );
 			} elseif ( is_object( $class ) ) {
 				$classInstance = $class;
 			}
@@ -221,6 +246,20 @@ class RouteConditional {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * @param string $className
+	 *
+	 * @return mixed|null
+	 * @throws \Exception
+	 */
+	private function getClassByString( string $className ) {
+		if ( class_exists( $className ) ) {
+			return new $className;
+		}
+
+		throw new \Exception( 'Class ' . $className . ' not found.' );
 	}
 
 	/**
