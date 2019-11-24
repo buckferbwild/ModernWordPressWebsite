@@ -44,8 +44,8 @@ Now it's up to you to create awesome stuff!
 Even though MWW is powerful, it's also very simple. It all starts with the routes:
 
 ```php
-// routes/conditional.php
-$router->add('is_front_page', ['App\Pages\Home', 'index']);
+// routes/app.php
+Route::add( 'is_front_page', Home_Controller::class );
 ```
 
 If `is_front_page()` is true, then call the method `index()` of `App\Pages\Home`:
