@@ -64,25 +64,29 @@ class Home_Controller extends Controller {
 }
 ```
 
-That's all we need to get started! MWW follows the Convention-over-Configuration (CoC) philosophy, so you can also do this: `Route::add( 'is_front_page', Home_Controller::class );`. If you pass just a class name to a Route, it will try to call `index()` on it by default.
+That's all we need to get started!
+
+MWW follows the Convention-over-Configuration (CoC) philosophy, which aims to make your code cleaner and smarter if you want to use the sensible defaults it provides. For instance, on the example above, you could also register your route like this: `Route::add( 'is_front_page', Home_Controller::class );`
+
+If you pass just a class name to a Route, it will try to call `index()` on it by default.
 
 Of course that modern applications uses a lot of dynamic data, not only static views. Here's how we can show Posts on the Home page:
 
 ```php
-class Home_Controller extends Controller
-{
-    public function index()
-    {
-        $this->render('pages.home', [
+class Home_Controller extends Controller {
+
+    public function index() {
+        $this->render( 'pages.home', [
             'posts' => get_posts()
-        ]);
+        ] );
     }
+    
 }
 ```
 Then, we have a variable `$posts` in our home view with the content of `get_posts()`:
 ```php
 // views/pages/home.blade.php
-foreach ($posts as $post) {
+foreach ( $posts as $post ) {
     echo $post->post_title;
 }
 ```
