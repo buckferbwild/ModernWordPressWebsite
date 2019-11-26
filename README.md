@@ -45,7 +45,9 @@ Even though MWW is powerful, it's also very simple. It all starts with the route
 
 ```php
 // routes/app.php
-Route::add( 'is_front_page', App/Controller/Pages/Home_Controller::class );
+use App/Controller/Pages/Home_Controller;
+
+Route::add( 'is_front_page', Home_Controller::class );
 ```
 
 If `is_front_page()` is true, then call the method `index()` of `App/Controller/Pages/Home_Controller`:
