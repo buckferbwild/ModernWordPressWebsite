@@ -47,7 +47,7 @@ Even though MWW is powerful, it's also very simple. It all starts with the route
 // routes/app.php
 use App/Controller/Pages/Home_Controller;
 
-Route::add( 'is_front_page', Home_Controller::class );
+Route::add( 'is_front_page', [ Home_Controller::class, 'index' ] );
 ```
 
 If `is_front_page()` is true, then call the method `index()` of `App/Controller/Pages/Home_Controller`:
@@ -61,8 +61,6 @@ class Home_Controller extends Controller {
     }
 }
 ```
-
-In this example we are including the header, the home page content and the footer views, using [template_include](https://codex.wordpress.org/Plugin_API/Filter_Reference/template_include) in the background.
 
 That's all we need to get started!
 
