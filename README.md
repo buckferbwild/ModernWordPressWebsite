@@ -45,20 +45,17 @@ Even though MWW is powerful, it's also very simple. It all starts with the route
 
 ```php
 // routes/app.php
-Route::add( 'is_front_page', Home_Controller::class );
+Route::add( 'is_front_page', App/Controller/Pages/Home_Controller::class );
 ```
 
-If `is_front_page()` is true, then call the method `index()` of `App\Pages\Home`:
+If `is_front_page()` is true, then call the method `index()` of `App/Controller/Pages/Home_Controller`:
 
 ```php
-// app/pages/Home.php
-class Home extends Page
-{
-    public function index()
-    {
-        $this->template->include('header');
-        $this->template->include('pages.home');
-        $this->template->include('footer');
+namespace App/Controller/Pages;
+
+class Home_Controller extends Controller {
+    public function index() {
+        $this->render('pages.home');
     }
 }
 ```
@@ -70,22 +67,19 @@ That's all we need to get started!
 Of course that modern applications uses a lot of dynamic data, not only static views. Here's how we can show Posts on the Home page:
 
 ```php
-// app/pages/Home.php
-class Home extends Page
+class Home_Controller extends Controller
 {
     public function index()
     {
-        $this->template->include('header');
-        $this->template->include('pages.home', [
+        $this->render('pages.home', [
             'posts' => get_posts()
         ]);
-        $this->template->include('footer');
     }
 }
 ```
 Then, we have a variable `$posts` in our home view with the content of `get_posts()`:
 ```php
-// views/pages/home.php
+// views/pages/home.blade.php
 foreach ($posts as $post) {
     echo $post->post_title;
 }
@@ -100,9 +94,8 @@ To contribute to Modern WordPress Website, you can open an issue with your sugge
 ## To-dos
 
 - Throw custom Exceptions throughout the framework and app
-- Refactor RouteConditional
-- Remove Assets helper class
-- Write unit tests
+- Implement Service Providers
+- Write more tests
 
 ## License
 
