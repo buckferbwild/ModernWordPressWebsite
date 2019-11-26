@@ -53,6 +53,7 @@ Route::add( 'is_front_page', [ Home_Controller::class, 'index' ] );
 If `is_front_page()` is true, then call the method `index()` of `App/Controller/Pages/Home_Controller`:
 
 ```php
+// app/Controller/Pages/Home_Controller.php
 namespace App/Controller/Pages;
 
 class Home_Controller extends Controller {
@@ -62,6 +63,18 @@ class Home_Controller extends Controller {
     }
     
 }
+```
+
+Now all you need is a view!
+
+```php
+// views/pages/home.blade.php
+@extends('layouts.main')
+
+@section('content')
+    I am the homepage!
+@endsection
+
 ```
 
 That's all we need to get started!
@@ -86,10 +99,56 @@ class Home_Controller extends Controller {
 Then, we have a variable `$posts` in our home view with the content of `get_posts()`:
 ```php
 // views/pages/home.blade.php
-foreach ( $posts as $post ) {
-    echo $post->post_title;
-}
+<?php foreach ( $posts as $post ): ?>
+    <a href="<?= esc_url( get_the_permalink($post->ID) ) ?>"><?= esc_html( $post->post_title ) ?></a>
+<?php endforeach; ?>
+<?php if (empty($posts)): ?>
+   No posts to show
+<?php endif; ?>
 ```
+
+Since this is a [Blade](https://laravel.com/docs/blade) template, this would also work:
+
+```php
+// views/pages/home.blade.php
+@foreach ( $posts as $post )
+    <a href=" {{ esc_url( get_the_permalink($post->ID) ) }} ">{{ esc_html($post->post_title) }}</a>
+@empty
+    No posts to show
+@endforelse
+```
+
+What if we want to show a Single post, now?
+
+Well, it's easy as 123:
+
+```php
+// 1: Register the route
+Route::add( 'is_single', Post_Controller::class );
+
+// 2: Create the Controller
+class Post_Controller extends Controller {
+    public function index() {
+        $this->render('pages.post');
+    }
+}
+
+// 3: Create the View. You don't need to pass the post to it
+//    because WordPress globals are always available in the views.
+//    You can even use the special @loop directive to loop through
+//    the current query, similar to while (has_post()): the_post();
+//    in a regular WordPress context.
+@extends('layouts.main')
+
+@section('content')
+    @loop
+        <h1 class="post-title">
+            {!! esc_html(get_the_title()) !!}
+        </h1>
+    @endloop
+@endsection
+```
+
 
 You see? This is MVC. We could easily separate the logic - we don't need to use `get_posts()` in our view, we can do it in the Controller, or better yet, ask a Model to fetch and prepare that data, and then we pass it to the view. This way, it is easier for our application to grow organized.
 
