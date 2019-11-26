@@ -56,13 +56,15 @@ If `is_front_page()` is true, then call the method `index()` of `App/Controller/
 namespace App/Controller/Pages;
 
 class Home_Controller extends Controller {
+
     public function index() {
         $this->render('pages.home');
     }
+    
 }
 ```
 
-That's all we need to get started!
+That's all we need to get started! MWW follows the Convention-over-Configuration (CoC) philosophy, so you can also do this: `Route::add( 'is_front_page', Home_Controller::class );`. If you pass just a class name to a Route, it will try to call `index()` on it by default.
 
 Of course that modern applications uses a lot of dynamic data, not only static views. Here's how we can show Posts on the Home page:
 
