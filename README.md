@@ -111,7 +111,7 @@ Since this is a [Blade](https://laravel.com/docs/blade) template, this would als
 
 ```php
 // views/pages/home.blade.php
-@foreach ( $posts as $post )
+@forelse ( $posts as $post )
     <a href=" {{ esc_url( get_the_permalink($post->ID) ) }} ">{{ esc_html($post->post_title) }}</a>
 @empty
     No posts to show
