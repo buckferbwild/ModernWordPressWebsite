@@ -6,7 +6,7 @@ Modern WordPress Website (MWW) is a modern way of building WordPress websites. S
 
 ## Think of it as a functions.php with an OOP architecture similar to Laravel.
 
-First, you route WordPress conditional tags such as *is_front_page()* to Controllers, then you fetch/manipulate data with a model, a repository, a service provider or similar, then you load a view, passing data to it. With MWW, you don't use a theme. However, like in functions.php, you have access to all WordPress functions and plugins.
+First, you route WordPress conditional tags such as *is_front_page()* to Controllers, then you fetch/manipulate data and render a view with the data. With MWW, you don't use a theme. However, like in functions.php, you have access to all WordPress functions and plugins.
 
 - MVC in WordPress.
 - Modern, yet simple PHP.
