@@ -4,7 +4,7 @@
 
 Modern WordPress Website (MWW) is a disruptive WordPress framework for bold developers.
 
-It couples with WordPress as a `mu-plugin` to provide you with a rich OOP environment to build a clean and solid application. 
+It couples with WordPress as a `mu-plugin` to provide a rich OOP environment to build a clean and solid application. 
 
 ### Highlights
 
@@ -130,7 +130,7 @@ class Post_Controller extends Controller {
 }
 
 // 3: Create the View. You don't need to pass the post to it
-//    because WordPress globals are always available in the views.
+//    since WordPress globals are always available in the views.
 //    You can even use the special @loop directive to loop through
 //    the current query, similar to while (has_post()): the_post();
 //    in a regular WordPress context.
