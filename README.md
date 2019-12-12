@@ -32,13 +32,13 @@ To get started, download a fresh copy of WordPress, run the install process and 
 3. On the root folder, run: `git clone https://github.com/Luc45/ModernWordPressWebsite wp-content/mu-plugins`
 4. Go to `wp-content/mu-plugins/mww/` and run `composer update` 
 5. (Recommended) Renaming `.env.example` to `.env` and enter your environment credentials in it. Run tests with `vendor/bin/codecept run`
-6. (Recommended) Delete all themes from `wp-content/themes`. Download [Empty Theme](https://github.com/Luc45/EmptyTheme/archive/master.zip) and set it as the active theme.
+6. (Recommended) Delete all plugins and all themes from `wp-content/themes`. Download [Empty Theme](https://github.com/Luc45/EmptyTheme/archive/master.zip) and set it as the active theme.
 
-## How it works
+## How MWW works
 
 MWW leverages the `template_include` filter to implement it's own `Template` system and keep all the application logic inside MWW itself, thus not needing a theme.
 
-So we start by routing requests to the appropriate views.
+We start by routing requests to the appropriate views.
 
 ```php
 // routes/app.php
