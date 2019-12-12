@@ -3,7 +3,7 @@
  * Plugin Name: Modern WordPress Website
  * Plugin URI: https://github.com/Luc45/Modern-WordPress-Website
  * Description: This project is using Modern WordPress Website (MWW).
- * Version: 1.0.0
+ * Version: 0.2.0
  * Author: Lucas Bustamante
  * Author URI: https://www.lucasbustamante.com.br
  * License: GPL2
