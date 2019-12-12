@@ -20,7 +20,10 @@ define( 'MWW_PATH', trailingslashit( __DIR__ . MWW_FOLDER ) );
 if ( file_exists( MWW_PATH . 'vendor/autoload.php' ) ) {
 	require_once( MWW_PATH . 'vendor/autoload.php' );
 } else {
-	throw new Exception( 'You need to run "composer update" in the following folder "' . MWW_PATH . '" to get started.' );
+	wp_die( sprintf(
+			'<h1>MWW requires one more step to work!</h1><p>Run "<code>composer update</code>" in the MWW folder: <strong>"%s"</strong></p>',
+			MWW_PATH )
+	);
 }
 
 /** Registers helper functions */
