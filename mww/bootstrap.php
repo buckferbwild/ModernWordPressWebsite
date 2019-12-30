@@ -13,8 +13,8 @@ use App\Service_Providers\Viewable_Providers\Viewable_Service_Provider;
  * Register our context-based Service Providers.
  * We load different Services depending on what kind of Request this is.
  */
-Container::register_contextual_provider( MWW_Service_Provider::class );
-Container::register_contextual_provider( Application_Service_Provider::class );
+Container::register( MWW_Service_Provider::class );
+Container::register( Application_Service_Provider::class );
 Container::register_contextual_provider( Viewable_Service_Provider::class );
 Container::register_contextual_provider( Ajax_Service_Provider::class );
 Container::register_contextual_provider( Admin_Service_Provider::class );

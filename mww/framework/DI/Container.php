@@ -2,6 +2,7 @@
 
 namespace MWW\DI;
 
+use InvalidArgumentException;
 use tad_DI52_Container;
 
 class Container {
@@ -70,11 +71,20 @@ class Container {
 	 * @Registers a service provider implementation.
 	 * @see \tad_DI52_Container::register
 	 */
+	public static function register( $serviceProviderClass ) {
+		return static::container()->register( $serviceProviderClass );
+	}
+
+	/**
+	 * @Registers a service provider implementation.
+	 * @see \tad_DI52_Container::register
+	 */
 	public static function register_contextual_provider( $serviceProviderClass ) {
-		if ( ! $serviceProviderClass instanceof Service_Provider ) {
-			return static::container()->register( $serviceProviderClass );
+		if ( ! is_subclass_of( $serviceProviderClass, Context_Aware_Service_Provider::class ) ) {
+			throw new InvalidArgumentException( 'Class is not an instance of ' . Context_Aware_Service_Provider::class );
 		}
 
+		/** @var Context_Aware_Service_Provider $serviceProviderClass */
 		if ( $serviceProviderClass::should_register() ) {
 			return static::container()->register( $serviceProviderClass );
 		}
