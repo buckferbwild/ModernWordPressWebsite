@@ -59,8 +59,8 @@ if ( ! function_exists( 'include_view' ) ) {
 /**
  *   Return wether string ends with string
  *
- * @param $haystack full string
- * @param $needle checks if haystack ends in needle
+ * @param string $haystack full string
+ * @param string $needle checks if haystack ends in needle
  *
  * @return bool
  */
