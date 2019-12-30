@@ -9,14 +9,21 @@
  * License: GPL2
  */
 
-use App\Bootstrap;
-use MWW\DI\Container;
+/*
+ * Let's begin by defining important constants for our application.
+ */
+define( 'MWW_FOLDER', '/mww/' );
+define( 'MWW_URL', plugin_dir_url( __FILE__ ) . MWW_FOLDER );
+define( 'MWW_PATH', __DIR__ . MWW_FOLDER );
 
-define( 'MWW_FOLDER', trailingslashit( '/mww' ) );
-define( 'MWW_URL', trailingslashit( plugin_dir_url( __FILE__ ) . MWW_FOLDER ) );
-define( 'MWW_PATH', trailingslashit( __DIR__ . MWW_FOLDER ) );
-
-/** Composer Autoloader */
+/*
+ * MWW follows the PSR-4 autoloader specification.
+ * Thus we require the autoloader provided by Composer.
+ *
+ * More information:
+ * https://www.php-fig.org/psr/psr-4/
+ * https://getcomposer.org/doc/04-schema.md#psr-4
+ */
 if ( file_exists( MWW_PATH . 'vendor/autoload.php' ) ) {
 	require_once( MWW_PATH . 'vendor/autoload.php' );
 } else {
@@ -26,12 +33,16 @@ if ( file_exists( MWW_PATH . 'vendor/autoload.php' ) ) {
 	);
 }
 
-/** Registers helper functions */
-require_once( MWW_PATH . 'framework/Support/helpers.php' );
+/* Loads some Framework and App Helper functions */
+require_once MWW_PATH . 'framework/helpers.php';
+include_once MWW_PATH . 'app/helpers.php';
 
-/** Builds the Dependency Injection Container and registers Service Providers */
-Container::registerBindings( MWW_PATH . 'framework/bindings.php' );
-Container::registerBindings( MWW_PATH . 'app/bindings.php' );
+/**
+ * Booststrap the application
+ *
+ * @var $container tad_DI52_Container
+ */
+$container = require_once MWW_PATH . 'app/bootstrap.php';
 
-/** Yahoo! */
-Container::make( Bootstrap::class )->run();
+/* Understands the request and handles it according to our Routes */
+$container->make( MWW\Routing\Router::class )->routeRequest();

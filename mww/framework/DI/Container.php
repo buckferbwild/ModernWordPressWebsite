@@ -18,7 +18,7 @@ class Container {
 	 *
 	 * @return \tad_DI52_Container
 	 */
-	protected static function container() {
+	public static function container() {
 		if ( static::$diContainer === null ) {
 			static::$diContainer = new tad_DI52_Container();
 		}
@@ -67,6 +67,20 @@ class Container {
 	}
 
 	/**
+	 * @Registers a service provider implementation.
+	 * @see \tad_DI52_Container::register
+	 */
+	public static function register_contextual_provider( $serviceProviderClass ) {
+		if ( ! $serviceProviderClass instanceof Service_Provider ) {
+			return static::container()->register( $serviceProviderClass );
+		}
+
+		if ( $serviceProviderClass::should_register() ) {
+			return static::container()->register( $serviceProviderClass );
+		}
+	}
+
+	/**
 	 * Proxy method to redirect any call made on a method not explicitly implemented by this
 	 * class to the container.
 	 *
@@ -77,14 +91,5 @@ class Container {
 	 */
 	public static function __callStatic( $name, array $args = [] ) {
 		return call_user_func_array( [ static::container(), $name ], $args );
-	}
-
-	/**
-	 * Registers the bindings from the bindings file
-	 */
-	public static function registerBindings( $bindings_file ) {
-		if ( file_exists( $bindings_file ) ) {
-			include_once( $bindings_file );
-		}
 	}
 }

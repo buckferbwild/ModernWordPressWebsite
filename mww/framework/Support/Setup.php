@@ -2,7 +2,7 @@
 
 namespace MWW\Support;
 
-use MWW\Assets\EnqueueScripts;
+use MWW\Assets\Enqueuer;
 use MWW\DI\Container;
 use MWW\Shortcodes\ShortcodesRegistrar;
 
@@ -21,7 +21,7 @@ class Setup {
 	public function loadAppAssets() {
 		add_action( 'wp_loaded', function () {
 			/** EnqueueScritps instance. Don't remove it. Used in included file. */
-			$assets = Container::make( EnqueueScripts::class );
+			$assets = Container::make( Enqueuer::class );
 			include_once( MWW_PATH . '/app/Support/assets.php' );
 		} );
 	}
@@ -52,17 +52,7 @@ class Setup {
 	 * https://wordpress.stackexchange.com/a/185578/27278
 	 */
 	public function removeEmojis() {
-		// all actions related to emojis
-		remove_action( 'admin_print_styles', 'print_emoji_styles' );
-		remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
-		remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
-		remove_action( 'wp_print_styles', 'print_emoji_styles' );
-		remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
-		remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
-		remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
 
-		// Remove DNS prefetch
-		add_filter( 'emoji_svg_url', '__return_false' );
 	}
 
 	/**
