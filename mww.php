@@ -42,7 +42,7 @@ include_once MWW_PATH . 'app/helpers.php';
  *
  * @var $container tad_DI52_Container
  */
-$container = require_once MWW_PATH . 'app/bootstrap.php';
+$container = require_once MWW_PATH . 'bootstrap.php';
 
 /* Understands the request and handles it according to our Routes */
 $container->make( MWW\Routing\Router::class )->routeRequest();
